@@ -1,6 +1,6 @@
 from ruamel.yaml import YAML
 
-from api.app import app
+from app.main import app
 
 yaml = YAML()
 with open("./api.yml", "w") as file:

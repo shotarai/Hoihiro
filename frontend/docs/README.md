@@ -15,12 +15,14 @@ yarn dev
 ## pushするまでにしてほしいこと
 
 ```
+cd frontend
 yarn fmt
 yarn lint
 ```
 
-## make generate_openapiしたら行って欲しいこと
+## make genしたら行って欲しいこと
 
 ```
+cd frontend
 yarn gen
 ```
