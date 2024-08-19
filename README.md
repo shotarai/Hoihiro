@@ -7,7 +7,7 @@
 まず、リモートリポジトリをローカルにクローンする。リポジトリのURLを使用して次のコマンドを実行する。
 
 ```
-git clone git@github.com:AE-1-Summer-Short-Internship2024/team7.git
+git clone git@github.com:shotarai/teamA.git
 ```
 
 ### 2. 現在のリポジトリを確認
