@@ -1,6 +1,5 @@
 dev:
-	cd backend
-    poetry run python -m uvicorn app.main:app --reload
+	poetry run python -m uvicorn app.main:app --reload
 
 _isort_check:
 	poetry run isort --check ./
