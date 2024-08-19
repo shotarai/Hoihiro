@@ -16,7 +16,7 @@ interface GeminiMessage {
   content: string;
 }
 
-const ChatScreen = () => {
+const Home = () => {
   let messages: GeminiMessage[] = [];
   let allMessages: GeminiMessage[] = [];
 
@@ -80,26 +80,14 @@ const ChatScreen = () => {
     <Flex
       direction="column"
       pos="relative"
-      bg="#F5E6D3"
+      bg="#ffffff"
       height="100svh"
       overflow="hidden"
     >
       <Flex justify="center">
         <Text fontSize="xl" fontWeight="bold" textAlign="center">
-          AIチャットに災害について質問してみよう！
+          子育てに関する質問にお答えします
         </Text>
-        <Link href="/select">
-          <Text
-            pl="10"
-            color="teal"
-            fontSize="xl"
-            fontWeight="bold"
-            textAlign="center"
-            _hover={{ textDecoration: "underline" }}
-          >
-            ← 戻る
-          </Text>
-        </Link>
       </Flex>
       <Box overflowY="auto">
         <VStack
@@ -188,4 +176,4 @@ const ChatScreen = () => {
   );
 };
 
-export default ChatScreen;
+export default Home;

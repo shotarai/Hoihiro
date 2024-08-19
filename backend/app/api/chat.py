@@ -17,24 +17,13 @@ if not api_key:
 genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-pro")
 
-FILE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "document.txt")
-
-
-def read_file_content(file_path: str) -> str:
-    try:
-        with open(file_path, "r", encoding="utf-8") as file:
-            return file.read()
-    except Exception as e:
-        print(f"Error reading file: {e}")
-        return ""
-
 
 @chat_router.get("/chat/{keyword}", response_model=str)
 def send_response(keyword: str):
     try:
-        file_content = read_file_content(FILE_PATH)
-
-        prompt = f"以下のドキュメントをもとに次の質問「{keyword}」に対して解答を考えて下さい:\n\n{file_content}\nResponse:"
+        prompt = (
+            f"次の質問に関する解答を短く話し口調で教えて下さい:\n{keyword}\nResponse:"
+        )
 
         response = model.generate_content(prompt)
 

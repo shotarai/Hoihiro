@@ -1,11 +1,13 @@
-import "@/styles/Roulette.module.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { AppProps } from "next/app";
+import { ProfileProvider } from "@/contexts/ProfileContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
-      <Component {...pageProps} />
+      <ProfileProvider>
+        <Component {...pageProps} />
+      </ProfileProvider>
     </ChakraProvider>
   );
 }
