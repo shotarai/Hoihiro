@@ -22,7 +22,7 @@ model = genai.GenerativeModel("gemini-pro")
 def send_response(keyword: str):
     try:
         prompt = (
-            f"次の質問に関する解答を短く話し口調で教えて下さい:\n{keyword}\nResponse:"
+            f"次の質問に関する解答を短く教えて下さい:\n{keyword}\nResponse:"
         )
 
         response = model.generate_content(prompt)
