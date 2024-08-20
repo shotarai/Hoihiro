@@ -8,6 +8,9 @@ import ReactMarkdown from "react-markdown";
 import { ChatTextarea } from "@/components/chatTextArea";
 import { BeatLoader } from "react-spinners";
 import { FiSend } from "react-icons/fi";
+import ModalPost from '../components/ModalPost';
+import { Modal } from "@chakra-ui/react";
+import { PlusSquareIcon} from '@chakra-ui/icons'
 
 type GeminiAgent = "user" | "assistant";
 
@@ -15,6 +18,25 @@ interface GeminiMessage {
   role: GeminiAgent;
   content: string;
 }
+
+const modalStyle = {
+  overlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    backgroundColor: "rgba(0,0,0,0.85)"
+  },
+  content: {
+    position: "absolute",
+    top: "5rem",
+    left: "5rem",
+    right: "5rem",
+    bottom: "5rem",
+    backgroundColor: "paleturquoise",
+    borderRadius: "1rem",
+    padding: "1.5rem"
+  }
+};
 
 const Home = () => {
   let messages: GeminiMessage[] = [];
@@ -27,6 +49,7 @@ const Home = () => {
   const router = useRouter();
   const params = useParams();
   const inputRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const sendMessage = async () => {
     if (prompt === "" || auth.currentUser === null) {
@@ -77,102 +100,34 @@ const Home = () => {
   }, []);
 
   return (
-    <Flex
-      direction="column"
-      pos="relative"
-      bg="#ffffff"
-      height="100svh"
-      overflow="hidden"
-    >
-      <Flex justify="center">
-        <Text fontSize="xl" fontWeight="bold" textAlign="center">
-          子育てに関する質問にお答えします
-        </Text>
-      </Flex>
-      <Box overflowY="auto">
-        <VStack
-          bg="bg.canvas"
-          align="start"
-          w="100%"
-          maxW="3xl"
-          marginX="auto"
-          px="4"
-          mt="10"
-          mb="40"
-        >
-          {messageArray.map(({ role, content }, index) => (
-            <Box
-              key={`chat-box-${index}`}
-              style={{
-                borderRadius: "5px",
-                padding: "10px 16px",
-                marginBottom: "16px",
-                maxWidth: role === "user" ? "80%" : "100%",
-                backgroundColor:
-                  role === "user" ? "var(--chakra-colors-teal-500)" : "#ecf1f1",
-                color: role === "user" ? "#ffffff" : "inherit",
-                alignSelf: role === "user" ? "flex-end" : "initial",
-              }}
-            >
-              <Box style={{ padding: "16px 16px" }}>
-                <ReactMarkdown>{content}</ReactMarkdown>
-              </Box>
-            </Box>
-          ))}
-          {message && (
-            <Box
-              style={{
-                borderRadius: "5px",
-                padding: "10px 16px",
-                marginBottom: "16px",
-                backgroundColor: "#bacaca",
-                maxWidth: "100%",
-              }}
-            >
-              <ReactMarkdown>{message}</ReactMarkdown>
-            </Box>
-          )}
-        </VStack>
-      </Box>
-
-      <Box
-        pos="absolute"
-        bottom="0"
-        insetX="0"
-        bgGradient="linear(to-t, bg.canvas 90%, rgba(0,0,0,0))"
-        pt="6"
-        pb="4"
-        mr="3"
-        ml="3"
+    <div>
+      <Flex
+        direction="column"
+        pos="relative"
+        bg="#ffffff"
+        height="100svh"
+        overflow="hidden"
       >
-        <Stack maxW="3xl" mx="auto">
-          <Box as="form" pos="relative" pb="1">
-            <ChatTextarea
-              rows={1}
-              value={prompt}
-              onChange={(e) => {
-                setPrompt(e.target.value);
-              }}
-              onKeyDown={handleKeyDown}
-              id="text-area"
-            />
-            <Box pos="absolute" top="2" right="0" zIndex="2">
-              <Button
-                onClick={sendMessage}
-                size="sm"
-                variant="text"
-                colorScheme="gray"
-                isDisabled={prompt === "" || params.id === null || loading}
-                isLoading={loading}
-                spinner={<BeatLoader size={4} />}
-              >
-                <FiSend />
-              </Button>
-            </Box>
-          </Box>
-        </Stack>
-      </Box>
-    </Flex>
+        
+        <Box position="fixed" bottom="4" right="4">
+        <Button 
+          onClick={() => setIsOpen(true)}
+          colorScheme='teal' 
+          size='lg'
+        >
+          相談する
+          <PlusSquareIcon></PlusSquareIcon>
+        </Button>
+        
+        </Box>
+      </Flex>
+      <ModalPost
+      open={isOpen}
+      onBack={() => setIsOpen(false)}
+      onPost={() => setIsOpen(false)}
+    />
+  </div>
+
   );
 };
 
