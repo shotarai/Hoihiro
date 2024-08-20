@@ -42,12 +42,15 @@ const SignIn = () => {
         const data = docSnap.data();
         const role = data.data.role;
         const nickname = data.data.nickname;
+        console.log(role, nickname);
         if (role || nickname) {
           setProfile({ role, nickname });
           router.push("/home");
         } else {
           router.push("/profile");
         }
+      } else {
+        router.push("/profile");
       }
     } catch (error) {
       setError(
