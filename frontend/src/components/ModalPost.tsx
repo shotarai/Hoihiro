@@ -1,19 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Button, Box, VStack, Flex, Stack, Text, Link, Input, Textarea, HStack, Alert,
-  AlertIcon} from "@chakra-ui/react";
-import { sendResponseChatKeywordGet } from "@/gen/default/default";
-import { useRouter } from "next/router";
-import { useParams } from "next/navigation";
+import React, { useState } from "react";
+import { Button, Box, Flex, Stack, Text, Input, Textarea, HStack, Alert,AlertIcon} from "@chakra-ui/react";
 import { auth } from "../../firebaseConfig";
-import ReactMarkdown from "react-markdown";
-import { ChatTextarea } from "@/components/chatTextArea";
-import { BeatLoader } from "react-spinners";
-import { FiSend } from "react-icons/fi";
 import { database} from "../../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { ArrowBackIcon, ArrowUpIcon} from '@chakra-ui/icons'
-
-
 
 export type ModalProps = {
     open: boolean;
@@ -22,7 +12,6 @@ export type ModalProps = {
   };
 
 const ModalPost = (props: ModalProps) => {
-
   const clearText = () => {
     setTitle("");
     setContent("");
@@ -37,7 +26,10 @@ const ModalPost = (props: ModalProps) => {
       setError("相談内容を入力してください");
       return;
     }
+
     setError(null);
+    props.onPost();
+
     const currentDate: Date = new Date();
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, "0");
@@ -45,10 +37,7 @@ const ModalPost = (props: ModalProps) => {
     const hours = String(currentDate.getHours()).padStart(2, "0");
     const minutes = String(currentDate.getMinutes()).padStart(2, "0");
     const seconds = String(currentDate.getSeconds()).padStart(2, "0");
-    setCurrentTime(`${year}/${month}/${day}/${hours}:${minutes}:${seconds}`);
     const time = `${year}/${month}/${day}/${hours}:${minutes}:${seconds}`;
-
-    props.onPost();
 
     const newData = {
       title: title,
@@ -91,7 +80,6 @@ const ModalPost = (props: ModalProps) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [currentTime, setCurrentTime] = useState("");
   const modalContent = {
     background: "white",
     padding: "10px",
@@ -114,11 +102,11 @@ const ModalPost = (props: ModalProps) => {
   };
     return props.open ? (
       <Flex
-      direction="column"
-      pos="relative"
-      bg="#ffffff"
-      height="100svh"
-      overflow="hidden"
+        direction="column"
+        pos="relative"
+        bg="#ffffff"
+        height="100svh"
+        overflow="hidden"
       >
         <div id="overlay" style={overlay}>
           <div id="modalContent" style={modalContent}>
@@ -144,7 +132,6 @@ const ModalPost = (props: ModalProps) => {
                   </Box>
                   <Button 
                     onClick={() => { postQuestion();}}
-                    
                   >
                     投稿
                     <ArrowUpIcon></ArrowUpIcon>
@@ -159,9 +146,7 @@ const ModalPost = (props: ModalProps) => {
             )}
           </div>
         </div>
-        
       </Flex>
-
       ) : (
         <></>
       );
