@@ -4,6 +4,7 @@ module.exports = {
       mode: "tags-split",
       target: "src/gen/backend.ts",
       schemas: "src/gen/schema",
+      baseUrl: "http://localhost:8000",
       clean: true,
     },
     hooks: {
@@ -14,5 +15,3 @@ module.exports = {
     },
   },
 };
-
-axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
