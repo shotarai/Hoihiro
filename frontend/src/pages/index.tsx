@@ -60,6 +60,10 @@ const SignIn = () => {
     }
   };
 
+  useEffect(() => {
+    setProfile({ role: "", nickname: "" });
+  }, [setProfile]);
+
   // 自動ログイン機能
   // useEffect(() => {
   //   const unsubscribe = onAuthStateChanged(auth, (currentUser) => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { auth } from "../../firebaseConfig";
 import {
@@ -18,6 +18,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useProfileContext } from "@/contexts/ProfileContext";
 
 const SignUp = () => {
   const [signUpEmail, setSignUpEmail] = useState("");
@@ -25,6 +26,7 @@ const SignUp = () => {
   // const [user, setUser] = useState<User | null>(null) //自動ログイン機能
   const router = useRouter();
   const toast = useToast();
+  const { setProfile } = useProfileContext();
 
   const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -43,6 +45,10 @@ const SignUp = () => {
       });
     }
   };
+
+  useEffect(() => {
+    setProfile({ role: "", nickname: "" });
+  }, [setProfile]);
 
   //自動ログイン機能
   // useEffect(() => {
