@@ -102,7 +102,7 @@ const Profile = () => {
                 <RadioGroup onChange={setRole} value={role}>
                   <Stack direction="row" spacing={5}>
                     <Radio value="保護者">保護者</Radio>
-                    <Radio value="保育者">保育士</Radio>
+                    <Radio value="保育士">保育士</Radio>
                   </Stack>
                 </RadioGroup>
               </FormControl>
