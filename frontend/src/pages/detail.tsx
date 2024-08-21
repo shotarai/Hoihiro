@@ -6,49 +6,41 @@ import { useEffect, useState } from "react";
 
 const Detail = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // const [replies, setReplies] = useState<
-  //   { role: string; nickname: string; comment: string }[]
-  // >([]);
+  const [replies, setReplies] = useState<
+    { role: string; nickname: string; comment: string }[]
+  >([]);
   const router = useRouter();
-  const { timestamp, title, content, replies} = router.query;
-  const [parsedReplies, setParseReplies] = useState<Record<string, {comment: string; role: string; nickname: string}> | null>(null);
-
+  const { timestamp, title, content } = router.query;
   const safeTimestamp: string = Array.isArray(timestamp)
     ? timestamp[0]
     : timestamp || "";
 
-    useEffect(() => {
-      if (replies) {
-        setParseReplies(JSON.parse(replies as string)); // repliesをオブジェクトにパース
-      } 
-    }, [replies]);
-  // useEffect(() => {
-  //   setReplies([
-  //     {
-  //       role: "保護者",
-  //       nickname: "Alice",
-  //       comment: "最初のコメントです。",
-  //     },
-  //     {
-  //       role: "保育士",
-  //       nickname: "Bob",
-  //       comment: "二つ目のコメントです。",
-  //     },
-  //     {
-  //       role: "保育士",
-  //       nickname: "Charlie",
-  //       comment: "三つ目のコメントです。",
-  //     },
-  //   ]);
-  // }, []);
+  useEffect(() => {
+    setReplies([
+      {
+        role: "保護者",
+        nickname: "Alice",
+        comment: "最初のコメントです。",
+      },
+      {
+        role: "保育士",
+        nickname: "Bob",
+        comment: "二つ目のコメントです。",
+      },
+      {
+        role: "保育士",
+        nickname: "Charlie",
+        comment: "三つ目のコメントです。",
+      },
+    ]);
+  }, []);
 
   const handleNewPost = (newReply: {
     role: string;
     nickname: string;
     comment: string;
-    timestamp: string;
   }) => {
-    setParseReplies((prevReplies) => [newReply, ...prevReplies]);
+    setReplies((prevReplies) => [newReply, ...prevReplies]);
     setIsOpen(false);
   };
 
@@ -72,7 +64,7 @@ const Detail = () => {
         <Heading as="h2" size="md" mb={4}>
           返信コメント
         </Heading>
-        {parsedReplies.map((newReply, index) => (
+        {replies.map((reply, index) => (
           <Box
             key={index}
             borderWidth="1px"
@@ -82,9 +74,9 @@ const Detail = () => {
             bg="white"
           >
             <Text fontWeight="bold">
-              {newReply.nickname} ({newReply.role})
+              {reply.nickname} ({reply.role})
             </Text>
-            <Text>{newReply.comment}</Text>
+            <Text>{reply.comment}</Text>
           </Box>
         ))}
       </VStack>

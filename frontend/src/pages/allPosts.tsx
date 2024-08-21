@@ -9,7 +9,17 @@ const AllPosts = () => {
   const router = useRouter();
 
   const [questionsList, setQuestionsList] = useState<
-    { title: string; content: string; timestamp: string; latestTime: string; replies: Record<string, {comment: string; role: string; nickname: string}>}[]>([]);
+    {
+      title: string;
+      content: string;
+      timestamp: string;
+      latestTime: string;
+      replies: Record<
+        string,
+        { comment: string; role: string; nickname: string }
+      >;
+    }[]
+  >([]);
 
   useEffect(() => {
     const fetchAllQuestions = async () => {
@@ -20,13 +30,26 @@ const AllPosts = () => {
         content: string;
         timestamp: string;
         latestTime: string;
-        replies: Record<string, {comment: string; role: string; nickname: string}>;
+        replies: Record<
+          string,
+          { comment: string; role: string; nickname: string }
+        >;
       }[] = [];
 
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const questions: Record<string, { title: string; content: string; latestTime: string; replies: Record<string, {comment: string; role: string; nickname: string}>}> =
-          data.data?.questions;
+        const questions: Record<
+          string,
+          {
+            title: string;
+            content: string;
+            latestTime: string;
+            replies: Record<
+              string,
+              { comment: string; role: string; nickname: string }
+            >;
+          }
+        > = data.data?.questions;
 
         if (questions) {
           const dataArray = Object.entries(questions).map(
@@ -50,7 +73,10 @@ const AllPosts = () => {
     title: string;
     content: string;
     latestTime: string;
-    replies: Record<string, {comment: string; role: string; nickname: string}>;
+    replies: Record<
+      string,
+      { comment: string; role: string; nickname: string }
+    >;
   }) => {
     router.push({
       pathname: "/detail",
@@ -64,7 +90,10 @@ const AllPosts = () => {
     });
   };
 
-  const sortedQuestionsList = questionsList.sort((a,b) => new Date(b.latestTime).getTime() - new Date(a.latestTime).getTime());
+  const sortedQuestionsList = questionsList.sort(
+    (a, b) =>
+      new Date(b.latestTime).getTime() - new Date(a.latestTime).getTime(),
+  );
 
   return (
     <Flex direction="column" minH="100vh" p={{ base: 4, md: 8 }}>
