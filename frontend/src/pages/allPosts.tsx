@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 import { database } from "../../firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
 
 const AllPosts = () => {
   const router = useRouter();
 
   const [questionsList, setQuestionsList] = useState<
-    { title: string; content: string; timestamp: string }[]
+    { title: string; content: string; timestamp: string; documentId: string }[]
   >([]);
 
   useEffect(() => {
@@ -16,6 +16,7 @@ const AllPosts = () => {
       const querySnapshot = await getDocs(collection(database, "users"));
 
       const allQuestions: {
+        documentId: string;
         title: string;
         content: string;
         timestamp: string;
@@ -31,6 +32,7 @@ const AllPosts = () => {
             ([timestamp, details]) => ({
               timestamp,
               ...details,
+              documentId: doc.id,
             }),
           );
           allQuestions.push(...dataArray);
@@ -47,6 +49,7 @@ const AllPosts = () => {
     timestamp: string;
     title: string;
     content: string;
+    documentId: string;
   }) => {
     router.push({
       pathname: "/detail",
@@ -54,6 +57,7 @@ const AllPosts = () => {
         timestamp: question.timestamp,
         title: question.title,
         content: question.content,
+        documentId: question.documentId,
       },
     });
   };

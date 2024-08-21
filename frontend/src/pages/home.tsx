@@ -6,7 +6,6 @@ import { FiUsers } from "react-icons/fi";
 import { database, auth } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { time } from "console";
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,6 +52,7 @@ const Home = () => {
     router.push({
       pathname: "/detail",
       query: {
+        documentId: auth.currentUser?.email,
         timestamp: question.timestamp,
         title: question.title,
         content: question.content,
