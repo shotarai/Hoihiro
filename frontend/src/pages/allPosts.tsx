@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Box, Flex, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 import { database } from "../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
+import { GoCommentDiscussion } from "react-icons/go";
 
 const AllPosts = () => {
   const router = useRouter();
@@ -62,7 +63,7 @@ const AllPosts = () => {
         {questionsList.map((question, index) => (
           <Box
             key={index}
-            w="70%"
+            w="100%"
             p={4}
             borderWidth="2px"
             borderRadius="md"
@@ -74,6 +75,15 @@ const AllPosts = () => {
             <Text fontSize="md" fontWeight="bold" textAlign="center">
               {question.title}
             </Text>
+            <HStack>
+              <GoCommentDiscussion />
+              <Text fontSize="xs" fontWeight="bold" textAlign="center">
+                10
+              </Text>
+              <Text fontSize="xs" fontWeight="bold" textAlign="center">
+                2024/8/21
+              </Text>
+            </HStack>
           </Box>
         ))}
       </VStack>
