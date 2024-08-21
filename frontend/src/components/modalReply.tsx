@@ -76,7 +76,10 @@ const ModalReply = (props: ModalProps) => {
           {
             data: {
               questions: {
-                [props.timestamp]: { replies: { [time]: newReply } },
+                [props.timestamp]: {
+                  replies: { [time]: newReply },
+                  latestTime: time,
+                },
               },
             },
           },

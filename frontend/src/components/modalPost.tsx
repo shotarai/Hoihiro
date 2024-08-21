@@ -63,6 +63,7 @@ const ModalPost = (props: ModalProps) => {
     const newData = {
       title: title,
       content: content,
+      latestTime: time,
     };
     const currentUserEmail = auth.currentUser?.email
       ? auth.currentUser.email
