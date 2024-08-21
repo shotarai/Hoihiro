@@ -30,6 +30,11 @@ export type ModalProps = {
     title: string;
     content: string;
     timestamp: string;
+    replies: Record<
+      string,
+      { comment: string; role: string; nickname: string }
+    >;
+    latestTime: string;
   }) => void;
 };
 
@@ -98,7 +103,13 @@ const ModalPost = (props: ModalProps) => {
       }
     }
     if (success) {
-      const newQuestion = { title, content, timestamp: time };
+      const newQuestion = {
+        title,
+        content,
+        timestamp: time,
+        latestTime: time,
+        replies: {},
+      };
       props.onPost(newQuestion);
     }
     clearText();

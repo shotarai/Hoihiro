@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 import { database } from "../../firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { GoCommentDiscussion } from "react-icons/go";
 
@@ -18,6 +18,7 @@ const AllPosts = () => {
         string,
         { comment: string; role: string; nickname: string }
       >;
+      documentId: string;
     }[]
   >([]);
 
@@ -26,6 +27,7 @@ const AllPosts = () => {
       const querySnapshot = await getDocs(collection(database, "users"));
 
       const allQuestions: {
+        documentId: string;
         title: string;
         content: string;
         timestamp: string;
@@ -56,13 +58,18 @@ const AllPosts = () => {
             ([timestamp, details]) => ({
               timestamp,
               ...details,
+              documentId: doc.id,
             }),
           );
           allQuestions.push(...dataArray);
         }
       });
 
-      setQuestionsList(allQuestions);
+      const sortedQuestionsList = allQuestions.sort(
+        (a, b) =>
+          new Date(b.latestTime).getTime() - new Date(a.latestTime).getTime(),
+      );
+      setQuestionsList(sortedQuestionsList);
     };
 
     fetchAllQuestions();
@@ -77,6 +84,7 @@ const AllPosts = () => {
       string,
       { comment: string; role: string; nickname: string }
     >;
+    documentId: string;
   }) => {
     router.push({
       pathname: "/detail",
@@ -84,50 +92,62 @@ const AllPosts = () => {
         timestamp: question.timestamp,
         title: question.title,
         content: question.content,
-        latestTime: question.latestTime,
-        replies: JSON.stringify(question.replies),
+        documentId: question.documentId,
       },
     });
   };
 
-  const sortedQuestionsList = questionsList.sort(
-    (a, b) =>
-      new Date(b.latestTime).getTime() - new Date(a.latestTime).getTime(),
-  );
-
   return (
-    <Flex direction="column" minH="100vh" p={{ base: 4, md: 8 }}>
-      <Text fontSize="2xl" pt="16" fontWeight="bold" textAlign="center" mb={4}>
+    <Flex direction="column" p={{ base: 4, md: 8 }}>
+      <Text fontSize="2xl" pt="16" pb="8" fontWeight="bold" textAlign="center">
         みんなの質問
       </Text>
-      <VStack spacing={4} w="full" maxH="70vh" overflowY="auto">
-        {sortedQuestionsList.map((question, index) => (
-          <Box
-            key={index}
-            w="100%"
-            p={1}
-            borderWidth="2px"
-            borderRadius="md"
-            boxShadow="md"
-            bg="gray.50"
-            _hover={{ bg: "teal.50", cursor: "pointer" }}
-            onClick={() => handleCardClick(question)}
-          >
-            <Text fontSize="lg" fontWeight="bold" textAlign="center">
-              {question.title}
-            </Text>
-            <HStack>
-              <GoCommentDiscussion />
-              <Text fontSize="xs" fontWeight="nomal" textAlign="center">
-                {Object.entries(question.replies).length}
+      <Flex direction="column" w="full" h="full" overflowY="auto">
+        {questionsList.map((question, index) => (
+          <React.Fragment key={index}>
+            <Flex
+              direction="column"
+              justifyContent="center"
+              w="100%"
+              h="8vh"
+              p={1}
+              borderWidth="2px"
+              borderRadius="md"
+              boxShadow="md"
+              bg="gray.50"
+              _hover={{ bg: "teal.50", cursor: "pointer" }}
+              onClick={() => handleCardClick(question)}
+            >
+              <Text fontSize="lg" fontWeight="bold" textAlign="center">
+                {question.title}
               </Text>
-              <Text fontSize="xs" fontWeight="nomal" textAlign="center">
-                {question.latestTime}
+            </Flex>
+            <Flex
+              mb={6}
+              mt={2}
+              ml={2}
+              justifyContent="flex-start"
+              alignItems="center"
+            >
+              <Flex mr={4} textAlign="left" alignItems="center">
+                <GoCommentDiscussion />
+                <Text
+                  fontSize={{ base: "xs", md: "sm" }}
+                  fontWeight="normal"
+                  ml={1}
+                >
+                  {question.replies
+                    ? Object.entries(question.replies).length
+                    : 0}
+                </Text>
+              </Flex>
+              <Text fontSize={{ base: "xs", md: "sm" }} fontWeight="normal">
+                更新時刻: {question.latestTime}
               </Text>
-            </HStack>
-          </Box>
+            </Flex>
+          </React.Fragment>
         ))}
-      </VStack>
+      </Flex>
     </Flex>
   );
 };

@@ -6,12 +6,25 @@ import { FiUsers } from "react-icons/fi";
 import { database, auth } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { time } from "console";
+import { GoCommentDiscussion } from "react-icons/go";
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [questions, setQuestions] = useState<
-    { title: string; content: string; timestamp: string }[]
+    {
+      title: string;
+      content: string;
+      latestTime: string;
+      replies: Record<
+        string,
+        {
+          comment: string;
+          role: string;
+          nickname: string;
+        }
+      >;
+      timestamp: string;
+    }[]
   >([]);
   const router = useRouter();
 
@@ -25,8 +38,18 @@ const Home = () => {
 
       if (docSnap.exists()) {
         const data = docSnap.data();
-        const questions: Record<string, { title: string; content: string }> =
-          data.data.questions;
+        const questions: Record<
+          string,
+          {
+            title: string;
+            content: string;
+            latestTime: string;
+            replies: Record<
+              string,
+              { comment: string; role: string; nickname: string }
+            >;
+          }
+        > = data.data?.questions;
         const dataArray = Object.entries(questions).map(
           ([timestamp, details]) => ({
             timestamp,
@@ -34,7 +57,11 @@ const Home = () => {
           }),
         );
         if (dataArray.length > 0) {
-          setQuestions(dataArray);
+          const sortedDataArray = dataArray.sort(
+            (a, b) =>
+              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+          );
+          setQuestions(sortedDataArray);
         } else {
           setQuestions([]);
         }
@@ -53,6 +80,7 @@ const Home = () => {
     router.push({
       pathname: "/detail",
       query: {
+        documentId: auth.currentUser?.email,
         timestamp: question.timestamp,
         title: question.title,
         content: question.content,
@@ -64,6 +92,11 @@ const Home = () => {
     title: string;
     content: string;
     timestamp: string;
+    replies: Record<
+      string,
+      { comment: string; role: string; nickname: string }
+    >;
+    latestTime: string;
   }) => {
     setQuestions((prevQuestions) => [newQuestion, ...prevQuestions]);
     setIsOpen(false);
@@ -86,35 +119,59 @@ const Home = () => {
       <Flex direction="column" flex="1" align="center" p={{ base: 4, md: 8 }}>
         <Text
           paddingTop="16"
+          paddingBottom="8"
           fontSize={{ base: "md", md: "xl" }}
           fontWeight="bold"
           textAlign="center"
         >
           質問履歴
         </Text>
-        <VStack spacing={4} mt={4} w="full" maxH="60vh" overflowY="auto" px={4}>
-          {questions.map((question) => (
-            <Box
-              key={question.timestamp}
-              w="100%"
-              p={4}
-              borderWidth="2px"
-              borderRadius="md"
-              boxShadow="md"
-              bg="gray.50"
-              _hover={{ bg: "teal.50", cursor: "pointer" }}
-              onClick={() => handleCardClick(question)}
-            >
-              <Text
-                fontSize={{ base: "sm", md: "md" }}
-                fontWeight="bold"
-                textAlign="center"
+        <Flex direction="column" w="full" h="full" overflowY="auto">
+          {questions.map((question, index) => (
+            <React.Fragment key={index}>
+              <Flex
+                direction="column"
+                justifyContent="center"
+                w="100%"
+                h="8vh"
+                p={1}
+                borderWidth="2px"
+                borderRadius="md"
+                boxShadow="md"
+                bg="gray.50"
+                _hover={{ bg: "teal.50", cursor: "pointer" }}
+                onClick={() => handleCardClick(question)}
               >
-                {question.title}
-              </Text>
-            </Box>
+                <Text fontSize="lg" fontWeight="bold" textAlign="center">
+                  {question.title}
+                </Text>
+              </Flex>
+              <Flex
+                mb={6}
+                mt={2}
+                ml={2}
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <Flex mr={4} textAlign="left" alignItems="center">
+                  <GoCommentDiscussion />
+                  <Text
+                    fontSize={{ base: "xs", md: "sm" }}
+                    fontWeight="normal"
+                    ml={1}
+                  >
+                    {question.replies
+                      ? Object.entries(question.replies).length
+                      : 0}
+                  </Text>
+                </Flex>
+                <Text fontSize={{ base: "xs", md: "sm" }} fontWeight="normal">
+                  更新時刻: {question.latestTime}
+                </Text>
+              </Flex>
+            </React.Fragment>
           ))}
-        </VStack>
+        </Flex>
       </Flex>
       <Box position="fixed" bottom={4} right={4} opacity="80%">
         <Button
