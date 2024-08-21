@@ -9,8 +9,7 @@ const AllPosts = () => {
   const router = useRouter();
 
   const [questionsList, setQuestionsList] = useState<
-    { title: string; content: string; timestamp: string }[]
-  >([]);
+    { title: string; content: string; timestamp: string; latestTime: string; replies: Record<string, {comment: string; role: string; nickname: string}>}[]>([]);
 
   useEffect(() => {
     const fetchAllQuestions = async () => {
@@ -20,11 +19,13 @@ const AllPosts = () => {
         title: string;
         content: string;
         timestamp: string;
+        latestTime: string;
+        replies: Record<string, {comment: string; role: string; nickname: string}>;
       }[] = [];
 
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const questions: Record<string, { title: string; content: string }> =
+        const questions: Record<string, { title: string; content: string; latestTime: string; replies: Record<string, {comment: string; role: string; nickname: string}>}> =
           data.data?.questions;
 
         if (questions) {
@@ -48,6 +49,8 @@ const AllPosts = () => {
     timestamp: string;
     title: string;
     content: string;
+    latestTime: string;
+    replies: Record<string, {comment: string; role: string; nickname: string}>;
   }) => {
     router.push({
       pathname: "/detail",
@@ -55,9 +58,13 @@ const AllPosts = () => {
         timestamp: question.timestamp,
         title: question.title,
         content: question.content,
+        latestTime: question.latestTime,
+        replies: JSON.stringify(question.replies),
       },
     });
   };
+
+  const sortedQuestionsList = questionsList.sort((a,b) => new Date(b.latestTime).getTime() - new Date(a.latestTime).getTime());
 
   return (
     <Flex direction="column" minH="100vh" p={{ base: 4, md: 8 }}>
@@ -65,11 +72,11 @@ const AllPosts = () => {
         みんなの質問
       </Text>
       <VStack spacing={4} w="full" maxH="70vh" overflowY="auto">
-        {questionsList.map((question, index) => (
+        {sortedQuestionsList.map((question, index) => (
           <Box
             key={index}
             w="100%"
-            p={4}
+            p={1}
             borderWidth="2px"
             borderRadius="md"
             boxShadow="md"
@@ -77,16 +84,16 @@ const AllPosts = () => {
             _hover={{ bg: "teal.50", cursor: "pointer" }}
             onClick={() => handleCardClick(question)}
           >
-            <Text fontSize="md" fontWeight="bold" textAlign="center">
+            <Text fontSize="lg" fontWeight="bold" textAlign="center">
               {question.title}
             </Text>
             <HStack>
               <GoCommentDiscussion />
-              <Text fontSize="xs" fontWeight="bold" textAlign="center">
-                10
+              <Text fontSize="xs" fontWeight="nomal" textAlign="center">
+                {Object.entries(question.replies).length}
               </Text>
-              <Text fontSize="xs" fontWeight="bold" textAlign="center">
-                2024/8/21
+              <Text fontSize="xs" fontWeight="nomal" textAlign="center">
+                {question.latestTime}
               </Text>
             </HStack>
           </Box>

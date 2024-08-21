@@ -96,7 +96,7 @@ const Home = () => {
           {questions.map((question) => (
             <Box
               key={question.timestamp}
-              w="70%"
+              w="100%"
               p={4}
               borderWidth="2px"
               borderRadius="md"
