@@ -44,7 +44,7 @@ const Detail = () => {
         bg="gray.50"
       >
         <Heading as="h1" mb={4}>
-          {title}
+          Q. {title}
         </Heading>
         <Text fontSize="lg">{content}</Text>
       </Box>

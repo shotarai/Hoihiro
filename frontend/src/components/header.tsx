@@ -1,14 +1,33 @@
 import { Box, Flex, Heading, Spacer, Button } from "@chakra-ui/react";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { useProfileContext } from "@/contexts/ProfileContext";
 import HogoshaIcon from "../../public/hogosha.svg";
 import HoikushiIcon from "../../public/hoikushi.svg";
 import { PiHouse } from "react-icons/pi";
+import { RiLogoutBoxRLine } from "react-icons/ri";
 import { useRouter } from "next/router";
+import { auth } from "../../firebaseConfig";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 const Header: FC = () => {
   const { profile } = useProfileContext();
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    });
+  }, []);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push("/");
+  };
 
   return (
     <Box
@@ -37,12 +56,17 @@ const Header: FC = () => {
           {profile?.nickname ? `${profile.nickname} さん` : ""}
         </Heading>
         <Spacer />
-        <Button
-          colorScheme="white"
-          size="md"
-          onClick={() => router.push("/home")}
-        >
-          <Box as={PiHouse} boxSize="2.0em" />
+        {isAuthenticated && (
+          <Button
+            colorScheme="white"
+            size="md"
+            onClick={() => router.push("/home")}
+          >
+            <Box as={PiHouse} boxSize="2.0em" />
+          </Button>
+        )}
+        <Button colorScheme="white" size="md" onClick={handleLogout}>
+          <Box as={RiLogoutBoxRLine} boxSize="2.0em" />
         </Button>
       </Flex>
     </Box>

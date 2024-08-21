@@ -4,6 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { database, auth } from "../../firebaseConfig";
 import {
   signInWithEmailAndPassword,
+  signOut,
   onAuthStateChanged,
   User,
 } from "firebase/auth";
@@ -61,7 +62,11 @@ const SignIn = () => {
   };
 
   useEffect(() => {
-    setProfile({ role: "", nickname: "" });
+    const logout = async () => {
+      await signOut(auth);
+      setProfile({ role: "", nickname: "" });
+    };
+    logout();
   }, [setProfile]);
 
   // 自動ログイン機能
