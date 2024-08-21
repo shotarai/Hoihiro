@@ -55,6 +55,15 @@ const Header: FC = () => {
       zIndex={1000}
     >
       <Flex align="center" w="100%" h="100%">
+        {canGoBack ? (
+          <Button colorScheme="white" size="md" onClick={handleBack}>
+            <Box as={BsChevronDoubleLeft} boxSize="2.0em" />
+          </Button>
+        ) : (
+          <Button colorScheme="white" size="md" onClick={handleBack}>
+            <Box boxSize="2.0em" />
+          </Button>
+        )}
         <Box height="95%" mr={4}>
           {profile?.role === "保育士" ? (
             <HoikushiIcon width="100%" height="100%" />
@@ -66,11 +75,6 @@ const Header: FC = () => {
           {profile?.nickname ? `${profile.nickname} さん` : ""}
         </Heading>
         <Spacer />
-        {canGoBack && (
-          <Button colorScheme="white" size="md" onClick={handleBack}>
-            <Box as={BsChevronDoubleLeft} boxSize="2.0em" />
-          </Button>
-        )}
         {isAuthenticated && (
           <Button
             colorScheme="white"

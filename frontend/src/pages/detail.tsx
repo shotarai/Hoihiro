@@ -10,10 +10,13 @@ const Detail = () => {
     { role: string; nickname: string; comment: string }[]
   >([]);
   const router = useRouter();
-  const { timestamp, title, content } = router.query;
+  const { timestamp, title, content, documentId } = router.query;
   const safeTimestamp: string = Array.isArray(timestamp)
     ? timestamp[0]
     : timestamp || "";
+  const safeDocumentId: string = Array.isArray(documentId)
+    ? documentId[0]
+    : documentId || "";
 
   useEffect(() => {
     setReplies([
@@ -96,6 +99,7 @@ const Detail = () => {
         onClose={() => setIsOpen(false)}
         onPost={handleNewPost}
         timestamp={safeTimestamp}
+        documetId={safeDocumentId}
       />
     </Box>
   );

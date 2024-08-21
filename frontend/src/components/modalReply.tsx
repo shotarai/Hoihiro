@@ -17,7 +17,6 @@ import {
 import { FiSend } from "react-icons/fi";
 import { FiXCircle } from "react-icons/fi";
 import { useProfileContext } from "@/contexts/ProfileContext";
-import { auth } from "../../firebaseConfig";
 import { database } from "../../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 
@@ -30,6 +29,7 @@ export type ModalProps = {
     comment: string;
   }) => void;
   timestamp: string;
+  documetId: string;
 };
 
 const ModalReply = (props: ModalProps) => {
@@ -61,10 +61,7 @@ const ModalReply = (props: ModalProps) => {
       comment: comment,
     };
 
-    const currentUserEmail = auth.currentUser?.email
-      ? auth.currentUser.email
-      : "";
-    const dataRef = doc(database, "users", currentUserEmail);
+    const dataRef = doc(database, "users", props.documetId);
     const maxRetries = 3;
     let attempts = 0;
     let success = false;
