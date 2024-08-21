@@ -121,7 +121,10 @@ const ModalPost = (props: ModalProps) => {
           <IconButton
             aria-label="Close modal"
             icon={<FiXCircle size={24} />}
-            onClick={props.onClose}
+            onClick={() => {
+              props.onClose();
+              clearText();
+            }}
             position="absolute"
             top="10px"
             right="10px"
