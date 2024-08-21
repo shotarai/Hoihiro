@@ -43,10 +43,15 @@ const AllPosts = () => {
     fetchAllQuestions();
   }, []);
 
-  const handleCardClick = (question: { title: string; content: string }) => {
+  const handleCardClick = (question: {
+    timestamp: string;
+    title: string;
+    content: string;
+  }) => {
     router.push({
       pathname: "/detail",
       query: {
+        timestamp: question.timestamp,
         title: question.title,
         content: question.content,
       },
