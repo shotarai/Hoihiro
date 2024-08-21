@@ -8,11 +8,13 @@ import { RiLogoutBoxRLine } from "react-icons/ri";
 import { useRouter } from "next/router";
 import { auth } from "../../firebaseConfig";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { BsChevronDoubleLeft } from "react-icons/bs";
 
 const Header: FC = () => {
   const { profile } = useProfileContext();
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [canGoBack, setCanGoBack] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -22,11 +24,19 @@ const Header: FC = () => {
         setIsAuthenticated(false);
       }
     });
-  }, []);
+
+    setCanGoBack(router.asPath !== "/");
+  }, [router.asPath, setCanGoBack]);
 
   const handleLogout = async () => {
     await signOut(auth);
     router.push("/");
+  };
+
+  const handleBack = () => {
+    if (canGoBack) {
+      router.back();
+    }
   };
 
   return (
@@ -56,6 +66,11 @@ const Header: FC = () => {
           {profile?.nickname ? `${profile.nickname} さん` : ""}
         </Heading>
         <Spacer />
+        {canGoBack && (
+          <Button colorScheme="white" size="md" onClick={handleBack}>
+            <Box as={BsChevronDoubleLeft} boxSize="2.0em" />
+          </Button>
+        )}
         {isAuthenticated && (
           <Button
             colorScheme="white"
