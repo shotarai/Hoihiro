@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { auth } from "../../firebaseConfig";
 import {
   createUserWithEmailAndPassword,
+  signOut,
   onAuthStateChanged,
   User,
 } from "firebase/auth";
@@ -47,7 +48,11 @@ const SignUp = () => {
   };
 
   useEffect(() => {
-    setProfile({ role: "", nickname: "" });
+    const logout = async () => {
+      await signOut(auth);
+      setProfile({ role: "", nickname: "" });
+    };
+    logout();
   }, [setProfile]);
 
   //自動ログイン機能
