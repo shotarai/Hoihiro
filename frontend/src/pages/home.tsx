@@ -6,6 +6,7 @@ import { FiUsers } from "react-icons/fi";
 import { database, auth } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
+import { time } from "console";
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,10 +45,15 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const handleCardClick = (question: { title: string; content: string }) => {
+  const handleCardClick = (question: {
+    timestamp: string;
+    title: string;
+    content: string;
+  }) => {
     router.push({
       pathname: "/detail",
       query: {
+        timestamp: question.timestamp,
         title: question.title,
         content: question.content,
       },
@@ -59,7 +65,7 @@ const Home = () => {
     content: string;
     timestamp: string;
   }) => {
-    setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+    setQuestions((prevQuestions) => [newQuestion, ...prevQuestions]);
     setIsOpen(false);
   };
 

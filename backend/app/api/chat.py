@@ -21,9 +21,7 @@ model = genai.GenerativeModel("gemini-pro")
 @chat_router.get("/chat/{keyword}", response_model=str)
 def send_response(keyword: str):
     try:
-        prompt = (
-            f"次の質問に関する解答を短く教えて下さい:\n{keyword}\nResponse:"
-        )
+        prompt = f"次の質問に関する解答を短く教えて下さい:\n{keyword}\nResponse:"
 
         response = model.generate_content(prompt)
 

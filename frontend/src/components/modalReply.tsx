@@ -17,6 +17,9 @@ import {
 import { FiSend } from "react-icons/fi";
 import { FiXCircle } from "react-icons/fi";
 import { useProfileContext } from "@/contexts/ProfileContext";
+import { auth } from "../../firebaseConfig";
+import { database } from "../../firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 
 export type ModalProps = {
   open: boolean;
@@ -26,6 +29,7 @@ export type ModalProps = {
     nickname: string;
     comment: string;
   }) => void;
+  timestamp: string;
 };
 
 const ModalReply = (props: ModalProps) => {
@@ -34,7 +38,7 @@ const ModalReply = (props: ModalProps) => {
     setComment("");
   };
 
-  const postReply = () => {
+  const postReply = async () => {
     if (!comment) {
       setError("コメントを入力してください");
       return;
@@ -42,12 +46,63 @@ const ModalReply = (props: ModalProps) => {
 
     setError(null);
 
+    const currentDate: Date = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    const hours = String(currentDate.getHours()).padStart(2, "0");
+    const minutes = String(currentDate.getMinutes()).padStart(2, "0");
+    const seconds = String(currentDate.getSeconds()).padStart(2, "0");
+    const time = `${year}/${month}/${day}/${hours}:${minutes}:${seconds}`;
+
     const newReply = {
       role: profile.role,
       nickname: profile.nickname,
       comment: comment,
     };
-    props.onPost(newReply);
+
+    const currentUserEmail = auth.currentUser?.email
+      ? auth.currentUser.email
+      : "";
+    const dataRef = doc(database, "users", currentUserEmail);
+    const maxRetries = 3;
+    let attempts = 0;
+    let success = false;
+
+    while (attempts < maxRetries && !success) {
+      try {
+        await setDoc(
+          dataRef,
+          {
+            data: {
+              questions: {
+                [props.timestamp]: {
+                  replies: { [time]: newReply },
+                  latestTime: time,
+                },
+              },
+            },
+          },
+          { merge: true },
+        );
+        success = true;
+      } catch (error) {
+        attempts += 1;
+        if (attempts >= maxRetries) {
+          console.error(
+            "Failed to save answer after multiple attempts:",
+            error,
+          );
+        } else {
+          console.log(`Retrying to save answer... (Attempt ${attempts})`);
+        }
+        return;
+      }
+    }
+    if (success) {
+      props.onPost(newReply);
+      props.onClose();
+    }
     clearText();
   };
 
@@ -68,7 +123,10 @@ const ModalReply = (props: ModalProps) => {
           <IconButton
             aria-label="Close modal"
             icon={<FiXCircle size={24} />}
-            onClick={props.onClose}
+            onClick={() => {
+              props.onClose();
+              clearText();
+            }}
             position="absolute"
             top="10px"
             right="10px"

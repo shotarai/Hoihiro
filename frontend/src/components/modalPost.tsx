@@ -63,6 +63,7 @@ const ModalPost = (props: ModalProps) => {
     const newData = {
       title: title,
       content: content,
+      latestTime: time,
     };
     const currentUserEmail = auth.currentUser?.email
       ? auth.currentUser.email
@@ -120,7 +121,10 @@ const ModalPost = (props: ModalProps) => {
           <IconButton
             aria-label="Close modal"
             icon={<FiXCircle size={24} />}
-            onClick={props.onClose}
+            onClick={() => {
+              props.onClose();
+              clearText();
+            }}
             position="absolute"
             top="10px"
             right="10px"

@@ -10,12 +10,23 @@ const Detail = () => {
     { role: string; nickname: string; comment: string }[]
   >([]);
   const router = useRouter();
-  const { title, content } = router.query;
+  const { timestamp, title, content } = router.query;
+  const safeTimestamp: string = Array.isArray(timestamp)
+    ? timestamp[0]
+    : timestamp || "";
 
   useEffect(() => {
     setReplies([
-      { role: "保護者", nickname: "Alice", comment: "最初のコメントです。" },
-      { role: "保育士", nickname: "Bob", comment: "二つ目のコメントです。" },
+      {
+        role: "保護者",
+        nickname: "Alice",
+        comment: "最初のコメントです。",
+      },
+      {
+        role: "保育士",
+        nickname: "Bob",
+        comment: "二つ目のコメントです。",
+      },
       {
         role: "保育士",
         nickname: "Charlie",
@@ -29,7 +40,7 @@ const Detail = () => {
     nickname: string;
     comment: string;
   }) => {
-    setReplies((prevReplies) => [...prevReplies, newReply]);
+    setReplies((prevReplies) => [newReply, ...prevReplies]);
     setIsOpen(false);
   };
 
@@ -84,6 +95,7 @@ const Detail = () => {
         open={isOpen}
         onClose={() => setIsOpen(false)}
         onPost={handleNewPost}
+        timestamp={safeTimestamp}
       />
     </Box>
   );
