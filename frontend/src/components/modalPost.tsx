@@ -22,6 +22,7 @@ import { database } from "../../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { FiSend } from "react-icons/fi";
 import { FiXCircle } from "react-icons/fi";
+import { sendResponseChatKeywordGet } from "@/gen/default/default";
 
 export type ModalProps = {
   open: boolean;
@@ -65,11 +66,19 @@ const ModalPost = (props: ModalProps) => {
     const seconds = String(currentDate.getSeconds()).padStart(2, "0");
     const time = `${year}/${month}/${day}/${hours}:${minutes}:${seconds}`;
 
+    const response = await sendResponseChatKeywordGet(content);
+
+    const newReply = {
+      role: "AI",
+      nickname: "Gemini AI",
+      comment: response.data,
+    };
+
     const newData = {
       title: title,
       content: content,
       latestTime: time,
-      replies: {},
+      replies: { [time]: newReply },
     };
     const currentUserEmail = auth.currentUser?.email
       ? auth.currentUser.email

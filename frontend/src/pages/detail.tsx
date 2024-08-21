@@ -8,6 +8,7 @@ import { doc, getDoc } from "firebase/firestore";
 import HogoshaIcon from "../../public/hogosha.svg";
 import HoikushiIcon from "../../public/hoikushi.svg";
 import React from "react";
+import ReactMarkdown from "react-markdown";
 
 const Detail = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -105,17 +106,22 @@ const Detail = () => {
               direction="column"
               justifyContent="center"
               w="100%"
-              h="8vh"
+              h="10vh"
               p={1}
               borderWidth="2px"
               borderRadius="md"
               boxShadow="md"
               bg="gray.50"
               mb={6}
+              overflowY="auto"
             >
-              <Text fontSize="lg" fontWeight="bold" textAlign="center">
-                {reply.comment}
-              </Text>
+              {reply.role === "AI" ? (
+                <ReactMarkdown>{reply.comment}</ReactMarkdown>
+              ) : (
+                <Text fontSize="lg" fontWeight="bold" textAlign="center">
+                  {reply.comment}
+                </Text>
+              )}
             </Flex>
           </React.Fragment>
         ))}
