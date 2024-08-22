@@ -26,6 +26,7 @@ import { FiSend } from "react-icons/fi";
 import { FiXCircle } from "react-icons/fi";
 import { useDropzone } from "react-dropzone";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { sendResponseChatKeywordGet } from "@/gen/default/default";
 
 export type ModalProps = {
   open: boolean;
@@ -119,11 +120,20 @@ const ModalPost = (props: ModalProps) => {
       const seconds = String(currentDate.getSeconds()).padStart(2, "0");
       const time = `${year}/${month}/${day}/${hours}:${minutes}:${seconds}`;
 
+      const response = await sendResponseChatKeywordGet(content);
+
+      const newReply = {
+        role: "AI",
+        nickname: "Gemini AI",
+        comment: response.data,
+      };
+
       const newData = {
         title: title,
         content: content,
         latestTime: time,
         ...(imageURL && { imageURL: imageURL }),
+        replies: { [time]: newReply },
       };
 
       const currentUserEmail = auth.currentUser?.email
