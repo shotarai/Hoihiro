@@ -125,7 +125,7 @@ const Profile = () => {
                 mt={6}
                 _hover={{ bg: "teal.600" }}
               >
-                Register
+                登録
               </Button>
             </Box>
             {error && (

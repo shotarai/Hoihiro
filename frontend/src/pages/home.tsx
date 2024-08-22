@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Box, Flex, Text, VStack } from "@chakra-ui/react";
+import { Button, Box, Flex, Text, Image } from "@chakra-ui/react";
 import ModalPost from "../components/modalPost";
 import { IoChatboxEllipses } from "react-icons/io5";
 import { FiUsers } from "react-icons/fi";
@@ -24,6 +24,7 @@ const Home = () => {
         }
       >;
       timestamp: string;
+      imageURL?: string;
     }[]
   >([]);
   const router = useRouter();
@@ -48,6 +49,7 @@ const Home = () => {
               string,
               { comment: string; role: string; nickname: string }
             >;
+            imageURL?: string;
           }
         > = data.data?.questions;
         const dataArray = Object.entries(questions).map(
@@ -122,7 +124,7 @@ const Home = () => {
         <Text
           paddingTop="16"
           paddingBottom="8"
-          fontSize={{ base: "md", md: "xl" }}
+          fontSize="2xl"
           fontWeight="bold"
           textAlign="center"
         >
@@ -132,44 +134,62 @@ const Home = () => {
           {questions.map((question, index) => (
             <React.Fragment key={index}>
               <Flex
-                direction="column"
-                justifyContent="center"
+                justifyContent="space-between"
                 w="100%"
-                h="8vh"
-                p={1}
-                borderWidth="2px"
+                h="20vh"
+                pt={8}
+                pr={4}
+                pl={4}
+                mb={2}
+                borderWidth="1px"
                 borderRadius="md"
-                boxShadow="md"
+                // boxShadow="md"
                 bg="gray.50"
                 _hover={{ bg: "teal.50", cursor: "pointer" }}
                 onClick={() => handleCardClick(question)}
               >
-                <Text fontSize="lg" fontWeight="bold" textAlign="left">
-                  {question.title}
-                </Text>
-              </Flex>
-              <Flex
-                mb={6}
-                mt={2}
-                ml={2}
-                justifyContent="flex-start"
-                alignItems="center"
-              >
-                <Flex mr={4} textAlign="left" alignItems="center">
-                  <GoCommentDiscussion />
-                  <Text
-                    fontSize={{ base: "xs", md: "sm" }}
-                    fontWeight="normal"
-                    ml={1}
-                  >
-                    {question.replies
-                      ? Object.entries(question.replies).length
-                      : 0}
+                <Flex direction="column" justifyContent="center">
+                  <Text fontSize="lg" fontWeight="bold" textAlign="left">
+                    {question.title.length > 18
+                      ? question.title.slice(0, 17) + "…"
+                      : question.title}
                   </Text>
+                  <Flex
+                    mb={6}
+                    mt={2}
+                    ml={2}
+                    justifyContent="flex-start"
+                    alignItems="center"
+                  >
+                    <Flex mr={4} textAlign="left" alignItems="center">
+                      <GoCommentDiscussion />
+                      <Text
+                        fontSize={{ base: "xs", md: "sm" }}
+                        fontWeight="normal"
+                        ml={1}
+                      >
+                        {question.replies
+                          ? Object.entries(question.replies).length
+                          : 0}
+                      </Text>
+                    </Flex>
+                    <Text
+                      fontSize={{ base: "xs", md: "sm" }}
+                      fontWeight="normal"
+                    >
+                      更新時刻: {question.latestTime}
+                    </Text>
+                  </Flex>
                 </Flex>
-                <Text fontSize={{ base: "xs", md: "sm" }} fontWeight="normal">
-                  更新時刻: {question.latestTime}
-                </Text>
+                {question.imageURL && (
+                  <Image
+                    src={question.imageURL}
+                    alt="Uploaded Image"
+                    borderRadius="md"
+                    width="auto"
+                    height="10vw"
+                  />
+                )}
               </Flex>
             </React.Fragment>
           ))}

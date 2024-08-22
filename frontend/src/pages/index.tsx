@@ -101,11 +101,11 @@ const SignIn = () => {
         <Box p={5}>
           <VStack spacing={4} align="stretch">
             <Heading as="h1" size="xl">
-              Sign In
+              ログイン
             </Heading>
             <Box as="form" onSubmit={handleSubmit} width="100%">
               <FormControl id="email" isRequired>
-                <FormLabel>Email Address</FormLabel>
+                <FormLabel>メールアドレス</FormLabel>
                 <Input
                   bg="gray.100"
                   type="email"
@@ -114,7 +114,7 @@ const SignIn = () => {
                 />
               </FormControl>
               <FormControl id="password" isRequired mt={4}>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>パスワード</FormLabel>
                 <Input
                   bg="gray.100"
                   type="password"
@@ -131,7 +131,7 @@ const SignIn = () => {
                 mt={6}
                 _hover={{ bg: "teal.600" }}
               >
-                Sign In
+                確定
               </Button>
             </Box>
             {error && (
@@ -142,7 +142,7 @@ const SignIn = () => {
             )}
             <Box textAlign="center" mt={4}>
               <NextLink href="/signup" passHref legacyBehavior>
-                <a style={{ color: "teal" }}>Sign Up</a>
+                <a style={{ color: "teal" }}>新規登録</a>
               </NextLink>
             </Box>
           </VStack>

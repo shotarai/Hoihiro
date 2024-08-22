@@ -70,19 +70,17 @@ const Detail = () => {
   };
 
   return (
-    <Box p={20}>
+    <Box pt={20} pr="5" pl="5">
       <Box
         borderWidth="1px"
         borderRadius="md"
         boxShadow="md"
         p={4}
         mt={4}
-        mb={8}
+        mb={4}
         bg="gray.50"
       >
-        <Heading as="h1" mb={4}>
-          Q. {title}
-        </Heading>
+        <Heading mb={4}>Q. {title}</Heading>
         <Text fontSize="lg" mb={4}>
           {content}
         </Text>
