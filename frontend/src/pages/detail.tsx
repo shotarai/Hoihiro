@@ -67,7 +67,7 @@ const Detail = () => {
   };
 
   return (
-    <Box p={20}>
+    <Box pt={20} pr="5" pl="5">
       <Box
         borderWidth="1px"
         borderRadius="md"
@@ -120,7 +120,6 @@ const Detail = () => {
             ) : (
               <Flex
                 direction="column"
-                justifyContent="center"
                 w="100%"
                 h="10vh"
                 p={1}
@@ -131,7 +130,7 @@ const Detail = () => {
                 mb={6}
                 overflowY="auto"
               >
-                <Text fontSize="lg" fontWeight="bold" textAlign="center">
+                <Text fontSize="xs" textAlign="left">
                   {reply.comment}
                 </Text>
               </Flex>
