@@ -49,6 +49,7 @@ const ModalPost = (props: ModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<File>();
   const [imageURL, setImageURL] = useState<string | null>(null);
+  const [showImageUpload, setShowImageUpload] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFile(acceptedFiles[0]);
@@ -86,6 +87,13 @@ const ModalPost = (props: ModalProps) => {
   const clearText = () => {
     setTitle("");
     setContent("");
+  };
+
+  const handleClose = () => {
+    props.onClose();
+    clearText();
+    setShowImageUpload(false);
+    setFile(undefined);
   };
 
   const postQuestion = async () => {
@@ -171,7 +179,7 @@ const ModalPost = (props: ModalProps) => {
   return (
     <Modal
       isOpen={props.open}
-      onClose={props.onClose}
+      onClose={handleClose}
       isCentered
       size={{ base: "sm", md: "2xl" }}
     >
@@ -182,10 +190,7 @@ const ModalPost = (props: ModalProps) => {
           <IconButton
             aria-label="Close modal"
             icon={<FiXCircle size={24} />}
-            onClick={() => {
-              props.onClose();
-              clearText();
-            }}
+            onClick={handleClose}
             position="absolute"
             top="10px"
             right="10px"
@@ -207,66 +212,78 @@ const ModalPost = (props: ModalProps) => {
                   setTitle(e.target.value);
                 }}
               />
-              <Text fontSize="md">内容</Text>
+              <HStack>
+                <Text fontSize="md">内容</Text>
+                <Button
+                  onClick={() => setShowImageUpload(true)}
+                  colorScheme="teal"
+                  variant="outline"
+                  size="sm"
+                >
+                  画像を追加
+                </Button>
+              </HStack>
               <Textarea
                 value={content}
                 onChange={(e) => {
                   setContent(e.target.value);
                 }}
               />
-              <Text mb="4">
-                画像を下のボックスにドラッグ＆ドロップするか、
-                <br />
-                クリックしてアップロードしてください。
-                <br />
-                （サポートされている形式：.jpeg .jpg .png）
-              </Text>
-              <Box
-                {...getRootProps()}
-                height="320px"
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-                textAlign="center"
-                borderWidth={2}
-                borderColor="gray.300"
-                overflow="hidden"
-              >
-                <input {...getInputProps()} />
-                {file ? (
-                  <>
-                    <Box mb="5" maxW="100%" maxH="80%">
-                      <Image
-                        src={URL.createObjectURL(file)}
-                        alt="Uploaded Image"
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        style={{ width: "auto", height: "100%" }}
-                      />
-                    </Box>
-                    <HStack>
-                      <Button
-                        mr={3}
-                        isDisabled={!file}
-                        onClick={handleUploadImage}
-                      >
-                        アップロード
-                      </Button>
-                      <Button
-                        mr={3}
-                        variant="ghost"
-                        onClick={handleCancelUpload}
-                      >
-                        キャンセル
-                      </Button>
-                    </HStack>
-                  </>
-                ) : (
-                  <Text>ファイルが選択されていません。</Text>
-                )}
-              </Box>
+              {showImageUpload && (
+                <>
+                  <Text mb="4" mt="4">
+                    画像を下のボックスにドラッグ＆ドロップするか、
+                    <br />
+                    クリックしてアップロードしてください。
+                    <br />
+                    （サポートされている形式：.jpeg .jpg .png）
+                  </Text>
+                  <Box
+                    {...getRootProps()}
+                    height="20vh"
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    textAlign="center"
+                    borderWidth={2}
+                    borderColor="gray.300"
+                    overflow="hidden"
+                    cursor="pointer"
+                  >
+                    <input {...getInputProps()} />
+                    {file ? (
+                      <>
+                        <Box mb="5" maxW="100%" maxH="80%">
+                          <Image
+                            src={URL.createObjectURL(file)}
+                            alt="Uploaded Image"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{ width: "auto", height: "100%" }}
+                          />
+                        </Box>
+                      </>
+                    ) : (
+                      <Text>ファイルが選択されていません。</Text>
+                    )}
+                  </Box>
+                  <HStack mt={4}>
+                    <Button
+                      mr={3}
+                      isDisabled={!file}
+                      onClick={handleUploadImage}
+                      colorScheme="teal"
+                    >
+                      アップロード
+                    </Button>
+                    <Button mr={3} variant="ghost" onClick={handleCancelUpload}>
+                      キャンセル
+                    </Button>
+                  </HStack>
+                </>
+              )}
             </Stack>
           )}
           {error && (

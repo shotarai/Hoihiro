@@ -15,6 +15,7 @@ import {
   IconButton,
   Image,
   Text,
+  Flex,
 } from "@chakra-ui/react";
 import { FiSend } from "react-icons/fi";
 import { FiXCircle } from "react-icons/fi";
@@ -40,6 +41,9 @@ const ModalReply = (props: ModalProps) => {
   const { profile } = useProfileContext();
   const [file, setFile] = useState<File>();
   const [imageURL, setImageURL] = useState<string | null>(null);
+  const [showImageUpload, setShowImageUpload] = useState(false);
+  const [comment, setComment] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFile(acceptedFiles[0]);
@@ -72,8 +76,18 @@ const ModalReply = (props: ModalProps) => {
   const handleCancelUpload = () => {
     setFile(undefined);
   };
+
   const clearText = () => {
     setComment("");
+  };
+
+  const handleClose = () => {
+    props.onClose();
+    clearText();
+    setShowImageUpload(false);
+    setFile(undefined);
+    setImageURL(null);
+    setError(null);
   };
 
   const postReply = async () => {
@@ -137,38 +151,40 @@ const ModalReply = (props: ModalProps) => {
     }
     if (success) {
       props.onPost(newReply);
-      props.onClose();
+      handleClose();
     }
-    clearText();
   };
-
-  const [comment, setComment] = useState("");
-  const [error, setError] = useState<string | null>(null);
 
   return (
     <Modal
       isOpen={props.open}
-      onClose={props.onClose}
+      onClose={handleClose}
       isCentered
       size={{ base: "sm", md: "2xl" }}
     >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          返信内容
-          <IconButton
-            aria-label="Close modal"
-            icon={<FiXCircle size={24} />}
-            onClick={() => {
-              props.onClose();
-              clearText();
-            }}
-            position="absolute"
-            top="10px"
-            right="10px"
-            background="transparent"
-            _hover={{ background: "transparent" }}
-          />
+          <Flex justifyContent="space-between" alignItems="center">
+            <Flex>
+              <Text pr={4}>返信内容</Text>
+              <Button
+                onClick={() => setShowImageUpload(true)}
+                colorScheme="teal"
+                variant="outline"
+                size="sm"
+              >
+                画像を追加
+              </Button>
+            </Flex>
+            <IconButton
+              aria-label="Close modal"
+              icon={<FiXCircle size={24} />}
+              onClick={handleClose}
+              background="transparent"
+              _hover={{ background: "transparent" }}
+            />
+          </Flex>
         </ModalHeader>
         <ModalBody>
           <Textarea
@@ -177,51 +193,61 @@ const ModalReply = (props: ModalProps) => {
             onChange={(e) => setComment(e.target.value)}
             placeholder="返信を入力してください"
           />
-          <Text mb="4">
-            画像を下のボックスにドラッグ＆ドロップするか、
-            <br />
-            クリックしてアップロードしてください。
-            <br />
-            （サポートされている形式：.jpeg .jpg .png）
-          </Text>
-          <Box
-            {...getRootProps()}
-            height="320px"
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            textAlign="center"
-            borderWidth={2}
-            borderColor="gray.300"
-            overflow="hidden"
-          >
-            <input {...getInputProps()} />
-            {file ? (
-              <>
-                <Box mb="5" maxW="100%" maxH="80%">
-                  <Image
-                    src={URL.createObjectURL(file)}
-                    alt="Uploaded Image"
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    style={{ width: "auto", height: "100%" }}
-                  />
-                </Box>
-                <HStack>
-                  <Button mr={3} isDisabled={!file} onClick={handleUploadImage}>
-                    アップロード
-                  </Button>
-                  <Button mr={3} variant="ghost" onClick={handleCancelUpload}>
-                    キャンセル
-                  </Button>
-                </HStack>
-              </>
-            ) : (
-              <Text>ファイルが選択されていません。</Text>
-            )}
-          </Box>
+          {showImageUpload && (
+            <>
+              <Text mb="4" mt="4">
+                画像を下のボックスにドラッグ＆ドロップするか、
+                <br />
+                クリックしてアップロードしてください。
+                <br />
+                （サポートされている形式：.jpeg .jpg .png）
+              </Text>
+              <Box
+                {...getRootProps()}
+                height="320px"
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                textAlign="center"
+                borderWidth={2}
+                borderColor="gray.300"
+                overflow="hidden"
+                cursor="pointer"
+              >
+                <input {...getInputProps()} />
+                {file ? (
+                  <>
+                    <Box mb="5" maxW="100%" maxH="80%">
+                      <Image
+                        src={URL.createObjectURL(file)}
+                        alt="Uploaded Image"
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        style={{ width: "auto", height: "100%" }}
+                      />
+                    </Box>
+                  </>
+                ) : (
+                  <Text>ファイルが選択されていません。</Text>
+                )}
+              </Box>
+              <HStack mt={4}>
+                <Button
+                  colorScheme="teal"
+                  mr={3}
+                  isDisabled={!file}
+                  onClick={handleUploadImage}
+                >
+                  アップロード
+                </Button>
+                <Button mr={3} variant="ghost" onClick={handleCancelUpload}>
+                  キャンセル
+                </Button>
+              </HStack>
+            </>
+          )}
           {error && (
             <Alert status="error" mt={4}>
               <AlertIcon />
