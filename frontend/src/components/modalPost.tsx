@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Button,
   Box,
@@ -18,12 +18,14 @@ import {
   IconButton,
   Spinner,
   Center,
+  Image,
 } from "@chakra-ui/react";
-import { auth } from "../../firebaseConfig";
-import { database } from "../../firebaseConfig";
+import { auth, database, storage } from "../../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { FiSend } from "react-icons/fi";
 import { FiXCircle } from "react-icons/fi";
+import { useDropzone } from "react-dropzone";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { sendResponseChatKeywordGet } from "@/gen/default/default";
 
 export type ModalProps = {
@@ -46,10 +48,53 @@ const ModalPost = (props: ModalProps) => {
   const [content, setContent] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [file, setFile] = useState<File>();
+  const [imageURL, setImageURL] = useState<string | null>(null);
+  const [showImageUpload, setShowImageUpload] = useState(false);
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    setFile(acceptedFiles[0]);
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: {
+      "image/jpeg": [".jpeg"],
+      "image/jpg": [".jpg"],
+      "image/png": [".png"],
+    },
+    maxFiles: 1,
+  });
+
+  const handleUploadImage = async () => {
+    if (!file) return;
+
+    const storageRef = ref(storage, `images/${file.name}`);
+    try {
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      setImageURL(downloadURL);
+      console.log("Image uploaded and URL saved:", downloadURL);
+      setFile(undefined);
+    } catch (error) {
+      console.error("Image upload failed:", error);
+    }
+  };
+
+  const handleCancelUpload = () => {
+    setFile(undefined);
+  };
 
   const clearText = () => {
     setTitle("");
     setContent("");
+  };
+
+  const handleClose = () => {
+    props.onClose();
+    clearText();
+    setShowImageUpload(false);
+    setFile(undefined);
   };
 
   const postQuestion = async () => {
@@ -75,20 +120,22 @@ const ModalPost = (props: ModalProps) => {
       const seconds = String(currentDate.getSeconds()).padStart(2, "0");
       const time = `${year}/${month}/${day}/${hours}:${minutes}:${seconds}`;
 
-      // const response = await sendResponseChatKeywordGet(content);
+      const response = await sendResponseChatKeywordGet(content);
 
-      // const newReply = {
-      //   role: "AI",
-      //   nickname: "Gemini AI",
-      //   comment: response.data,
-      // };
+      const newReply = {
+        role: "AI",
+        nickname: "Gemini AI",
+        comment: response.data,
+      };
 
       const newData = {
         title: title,
         content: content,
         latestTime: time,
-        // replies: { [time]: newReply },
+        ...(imageURL && { imageURL: imageURL }),
+        replies: { [time]: newReply },
       };
+
       const currentUserEmail = auth.currentUser?.email
         ? auth.currentUser.email
         : "";
@@ -142,7 +189,7 @@ const ModalPost = (props: ModalProps) => {
   return (
     <Modal
       isOpen={props.open}
-      onClose={props.onClose}
+      onClose={handleClose}
       isCentered
       size={{ base: "sm", md: "2xl" }}
     >
@@ -153,10 +200,7 @@ const ModalPost = (props: ModalProps) => {
           <IconButton
             aria-label="Close modal"
             icon={<FiXCircle size={24} />}
-            onClick={() => {
-              props.onClose();
-              clearText();
-            }}
+            onClick={handleClose}
             position="absolute"
             top="10px"
             right="10px"
@@ -178,13 +222,78 @@ const ModalPost = (props: ModalProps) => {
                   setTitle(e.target.value);
                 }}
               />
-              <Text fontSize="md">内容</Text>
+              <HStack>
+                <Text fontSize="md">内容</Text>
+                <Button
+                  onClick={() => setShowImageUpload(true)}
+                  colorScheme="teal"
+                  variant="outline"
+                  size="sm"
+                >
+                  画像を追加
+                </Button>
+              </HStack>
               <Textarea
                 value={content}
                 onChange={(e) => {
                   setContent(e.target.value);
                 }}
               />
+              {showImageUpload && (
+                <>
+                  <Text mb="4" mt="4">
+                    画像を下のボックスにドラッグ＆ドロップするか、
+                    <br />
+                    クリックしてアップロードしてください。
+                    <br />
+                    （サポートされている形式：.jpeg .jpg .png）
+                  </Text>
+                  <Box
+                    {...getRootProps()}
+                    height="20vh"
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    textAlign="center"
+                    borderWidth={2}
+                    borderColor="gray.300"
+                    overflow="hidden"
+                    cursor="pointer"
+                  >
+                    <input {...getInputProps()} />
+                    {file ? (
+                      <>
+                        <Box mb="5" maxW="100%" maxH="80%">
+                          <Image
+                            src={URL.createObjectURL(file)}
+                            alt="Uploaded Image"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{ width: "auto", height: "100%" }}
+                          />
+                        </Box>
+                      </>
+                    ) : (
+                      <Text>ファイルが選択されていません。</Text>
+                    )}
+                  </Box>
+                  <HStack mt={4}>
+                    <Button
+                      mr={3}
+                      isDisabled={!file}
+                      onClick={handleUploadImage}
+                      colorScheme="teal"
+                    >
+                      アップロード
+                    </Button>
+                    <Button mr={3} variant="ghost" onClick={handleCancelUpload}>
+                      キャンセル
+                    </Button>
+                  </HStack>
+                </>
+              )}
             </Stack>
           )}
           {error && (

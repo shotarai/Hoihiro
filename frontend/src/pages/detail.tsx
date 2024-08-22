@@ -1,28 +1,33 @@
-import { useRouter } from "next/router";
-import { Box, Heading, Text, Button, Flex } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, Heading, Text, Button, Flex, Image } from "@chakra-ui/react";
 import { IoChatboxEllipses } from "react-icons/io5";
 import ModalReply from "@/components/modalReply";
-import { useEffect, useState } from "react";
+import ImageModal from "@/components/modalImage";
+import { useRouter } from "next/router";
 import { database } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import HogoshaIcon from "../../public/hogosha.svg";
 import HoikushiIcon from "../../public/hoikushi.svg";
-import React from "react";
 import ReactMarkdown from "react-markdown";
 
 const Detail = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false); // モーダル用のステート
+  const [selectedImageURL, setSelectedImageURL] = useState<string | null>(null);
   const [replies, setReplies] = useState<
-    { role: string; nickname: string; comment: string }[]
+    { role: string; nickname: string; comment: string; imageURL?: string }[]
   >([]);
   const router = useRouter();
-  const { timestamp, title, content, documentId } = router.query;
+  const { timestamp, title, content, documentId, imageURL } = router.query;
   const safeTimestamp: string = Array.isArray(timestamp)
     ? timestamp[0]
     : timestamp || "";
   const safeDocumentId: string = Array.isArray(documentId)
     ? documentId[0]
     : documentId || "";
+  const safeImageURL: string | undefined = Array.isArray(imageURL)
+    ? imageURL[0]
+    : imageURL || undefined;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,7 +60,7 @@ const Detail = () => {
       }
     };
     fetchData();
-  }, [safeDocumentId, safeTimestamp]);
+  }, [safeDocumentId, safeImageURL, safeTimestamp]);
 
   const handleNewPost = (newReply: {
     role: string;
@@ -66,6 +71,13 @@ const Detail = () => {
     setIsOpen(false);
   };
 
+  const handleImageClick = (url: string) => {
+    if (url) {
+      setSelectedImageURL(url);
+      setModalOpen(true);
+    }
+  };
+
   return (
     <Box pt={20} pr="5" pl="5">
       <Box
@@ -74,13 +86,26 @@ const Detail = () => {
         boxShadow="md"
         p={4}
         mt={4}
-        mb={8}
+        mb={4}
         bg="gray.50"
       >
-        <Heading as="h1" mb={4}>
-          Q. {title}
-        </Heading>
-        <Text fontSize="lg">{content}</Text>
+        <Heading mb={4}>Q. {title}</Heading>
+        <Text fontSize="lg" mb={4}>
+          {content}
+        </Text>
+        {safeImageURL && (
+          <Flex justifyContent="center" mt={2}>
+            <Image
+              src={safeImageURL}
+              alt="Uploaded Image"
+              borderRadius="md"
+              width="20vw"
+              height="auto"
+              onClick={() => handleImageClick(safeImageURL)}
+              cursor="pointer"
+            />
+          </Flex>
+        )}
       </Box>
 
       <Heading as="h2" size="md" mb={4}>
@@ -118,21 +143,36 @@ const Detail = () => {
                 <ReactMarkdown>{reply.comment}</ReactMarkdown>
               </Flex>
             ) : (
-              <Flex
-                direction="column"
-                w="100%"
-                h="10vh"
-                p={1}
-                borderWidth="2px"
-                borderRadius="md"
-                boxShadow="md"
-                bg="gray.50"
-                mb={6}
-                overflowY="auto"
-              >
-                <Text fontSize="xs" textAlign="left">
-                  {reply.comment}
-                </Text>
+              <Flex direction="column" w="100%" p={1} mb={6}>
+                <Flex
+                  borderWidth="2px"
+                  borderRadius="md"
+                  boxShadow="md"
+                  bg="gray.50"
+                  overflowY="auto"
+                  justifyContent="space-between"
+                  height="20vw"
+                  pr={4}
+                  pl={4}
+                  pt={2}
+                >
+                  <Text fontSize="lg" textAlign="left" flex="1">
+                    {reply.comment}
+                  </Text>
+                  {reply.imageURL && (
+                    <Flex justifyContent="flex-end" alignItems="center" ml={2}>
+                      <Image
+                        src={reply.imageURL}
+                        alt="Uploaded Reply Image"
+                        borderRadius="md"
+                        width="auto"
+                        height="20vw"
+                        onClick={() => handleImageClick(reply.imageURL || "")}
+                        cursor="pointer"
+                      />
+                    </Flex>
+                  )}
+                </Flex>
               </Flex>
             )}
           </React.Fragment>
@@ -156,6 +196,14 @@ const Detail = () => {
         timestamp={safeTimestamp}
         documentId={safeDocumentId}
       />
+
+      {selectedImageURL && (
+        <ImageModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          imageURL={selectedImageURL}
+        />
+      )}
     </Box>
   );
 };
