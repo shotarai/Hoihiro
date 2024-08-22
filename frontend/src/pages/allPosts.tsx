@@ -98,9 +98,9 @@ const AllPosts = () => {
   };
 
   return (
-    <Flex direction="column" p={{ base: 4, md: 8 }}>
-      <Text fontSize="2xl" pt="16" pb="8" fontWeight="bold" textAlign="center">
-        みんなの質問
+    <Flex direction="column" p={{ base: 4, md: 8 }} mb={16}>
+      <Text fontSize="2xl" pt="16" pb="4" fontWeight="bold" textAlign="center">
+        みんなの相談
       </Text>
       <Flex direction="column" w="full" h="full" overflowY="auto">
         {questionsList.map((question, index) => (

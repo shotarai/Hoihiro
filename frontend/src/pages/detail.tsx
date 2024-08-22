@@ -67,79 +67,81 @@ const Detail = () => {
   };
 
   return (
-    <Box pt={20} pr="5" pl="5">
-      <Box
-        borderWidth="1px"
-        borderRadius="md"
-        boxShadow="md"
-        p={4}
-        mt={4}
-        mb={4}
-        bg="gray.50"
-      >
-        <Heading mb={4}>
-          Q. {title}
+    <Box pt={20} pr="5" pl="5" mb={16}>
+      <Box position="fixed">
+        <Box
+          borderWidth="1px"
+          borderRadius="md"
+          // boxShadow="md"
+          p={4}
+          mt={4}
+          mb={4}
+          mr={4}
+          bg="gray.50"
+        >
+          <Heading size="lg" mb={4}>
+            Q. {title}
+          </Heading>
+          <Text fontSize="lg">{content}</Text>
+        </Box>
+
+        <Heading as="h2" size="md" mb={2}>
+          返信コメント
         </Heading>
-        <Text fontSize="lg">{content}</Text>
       </Box>
-
-      <Heading as="h2" size="md" mb={4}>
-        返信コメント
-      </Heading>
-
-      <Flex direction="column" w="full" h="full" overflowY="auto">
-        {replies.map((reply, index) => (
-          <React.Fragment key={index}>
-            <Flex justifyContent="flex-start" alignItems="center" mb="2">
-              <Flex alignItems="center" mr="2">
-                {reply.role === "保育士" ? (
-                  <HoikushiIcon height="4vh" />
-                ) : (
-                  <HogoshaIcon height="6vh" />
-                )}
-                <Text fontWeight="bold" ml="2">
-                  {reply.nickname}
-                </Text>
+        <Flex direction="column" w="full" h="full" overflowY="auto" mt="200">
+          {replies.map((reply, index) => (
+            <React.Fragment key={index}>
+              <Flex justifyContent="flex-start" alignItems="center" mb="0">
+                <Flex alignItems="center" mr="2">
+                  {reply.role === "保育士" ? (
+                    <HoikushiIcon height="3vh" />
+                  ) : (
+                    <HogoshaIcon height="4vh" />
+                  )}
+                  <Text fontWeight="bold" ml="2">
+                    {reply.nickname}
+                  </Text>
+                </Flex>
               </Flex>
-            </Flex>
-            {reply.role === "AI" ? (
-              <Flex
-                direction="column"
-                w="100%"
-                h="10vh"
-                p={1}
-                borderWidth="2px"
-                borderRadius="md"
-                boxShadow="md"
-                bg="gray.50"
-                mb={6}
-                overflowY="auto"
-              >
-                <ReactMarkdown>{reply.comment}</ReactMarkdown>
-              </Flex>
-            ) : (
-              <Flex
-                direction="column"
-                w="100%"
-                h="10vh"
-                p={1}
-                borderWidth="2px"
-                borderRadius="md"
-                boxShadow="md"
-                bg="gray.50"
-                mb={6}
-                overflowY="auto"
-              >
-                <Text fontSize="xs" textAlign="left">
-                  {reply.comment}
-                </Text>
-              </Flex>
-            )}
-          </React.Fragment>
-        ))}
-      </Flex>
+              {reply.role === "AI" ? (
+                <Flex
+                  direction="column"
+                  w="100%"
+                  h="10vh"
+                  p={1}
+                  borderWidth="1px"
+                  borderRadius="md"
+                  boxShadow="md"
+                  bg="gray.50"
+                  mb={6}
+                  overflowY="auto"
+                >
+                  <ReactMarkdown>{reply.comment}</ReactMarkdown>
+                </Flex>
+              ) : (
+                <Flex
+                  direction="column"
+                  w="100%"
+                  h="auto"
+                  p={2}
+                  borderWidth="1px"
+                  borderRadius="md"
+                  // boxShadow="md"
+                  bg="gray.50"
+                  mb={2}
+                  overflowY="auto"
+                >
+                  <Text fontSize="xs" textAlign="left">
+                    {reply.comment}
+                  </Text>
+                </Flex>
+              )}
+            </React.Fragment>
+          ))}
+        </Flex>
 
-      <Box position="fixed" bottom={4} right={4} opacity="80%">
+      <Box position="fixed" bottom={20} right={4} opacity="100%">
         <Button
           onClick={() => setIsOpen(true)}
           colorScheme="teal"

@@ -7,6 +7,7 @@ import { database, auth } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { GoCommentDiscussion } from "react-icons/go";
+import { CgProfile } from "react-icons/cg";
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -103,8 +104,8 @@ const Home = () => {
   };
 
   return (
-    <Flex direction="column" minH="100vh" overflow="hidden">
-      <Box position="fixed" top={20} right={4} zIndex={1000}>
+    <Flex direction="column" minH="100vh" overflow="hidden" mb={16}>
+      {/* <Box position="fixed" top={20} right={4} zIndex={1000}>
         <Button
           colorScheme="blue"
           size={{ base: "sm", md: "md" }}
@@ -115,16 +116,16 @@ const Home = () => {
         >
           みんなの質問
         </Button>
-      </Box>
+      </Box> */}
       <Flex direction="column" flex="1" align="center" p={{ base: 4, md: 8 }}>
         <Text
           paddingTop="16"
-          paddingBottom="8"
+          paddingBottom="4"
           fontSize="2xl"
           fontWeight="bold"
           textAlign="center"
         >
-          質問履歴
+          相談履歴
         </Text>
         <Flex direction="column" w="full" h="full" overflowY="auto">
           {questions.map((question, index) => (
@@ -177,7 +178,7 @@ const Home = () => {
           ))}
         </Flex>
       </Flex>
-      <Box position="fixed" bottom={4} right={4} opacity="80%">
+      <Box position="fixed" bottom={20} right={4} opacity="100%">
         <Button
           onClick={() => setIsOpen(true)}
           colorScheme="teal"

@@ -92,7 +92,7 @@ const Profile = () => {
         <Box p={5}>
           <VStack spacing={4} align="stretch">
             <Heading as="h1" size="xl">
-              Profile
+              プロフィール
             </Heading>
             <Box as="form" onSubmit={handleSubmit} width="100%">
               <FormControl as="fieldset" isRequired>

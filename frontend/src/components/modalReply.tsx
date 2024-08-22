@@ -151,7 +151,7 @@ const ModalReply = (props: ModalProps) => {
             <Box w="100%" />
             <Button
               onClick={postReply}
-              colorScheme="blue"
+              colorScheme="teal"
               rightIcon={<FiSend size={20} />}
             >
               返信
