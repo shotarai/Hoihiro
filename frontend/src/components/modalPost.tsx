@@ -88,6 +88,7 @@ const ModalPost = (props: ModalProps) => {
   const clearText = () => {
     setTitle("");
     setContent("");
+    setError("");
   };
 
   const handleClose = () => {
@@ -98,8 +99,8 @@ const ModalPost = (props: ModalProps) => {
   };
 
   const postQuestion = async () => {
-    if (!title) {
-      setError("タイトルを入力してください");
+    if (!title && !content) {
+      setError("タイトルと相談内容を入力してください");
       return;
     }
     if (!content) {
@@ -309,7 +310,7 @@ const ModalPost = (props: ModalProps) => {
             <Box w="100%" />
             <Button
               onClick={postQuestion}
-              colorScheme="blue"
+              colorScheme="teal"
               rightIcon={<FiSend size={20} />}
               isLoading={isLoading}
               loadingText="投稿中"

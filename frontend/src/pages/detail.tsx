@@ -79,20 +79,21 @@ const Detail = () => {
   };
 
   return (
-    <Box pt={20} pr="5" pl="5">
+    <Box pt={20} pr="5" pl="5" mb={16}>
       <Box
         borderWidth="1px"
         borderRadius="md"
-        boxShadow="md"
+        // boxShadow="md"
         p={4}
         mt={4}
         mb={4}
+        mr={4}
         bg="gray.50"
       >
-        <Heading mb={4}>Q. {title}</Heading>
-        <Text fontSize="lg" mb={4}>
-          {content}
-        </Text>
+        <Heading size="lg" mb={4}>
+          Q. {title}
+        </Heading>
+        <Text fontSize="lg">{content}</Text>
         {safeImageURL && (
           <Flex justifyContent="center" mt={2}>
             <Image
@@ -118,9 +119,9 @@ const Detail = () => {
             <Flex justifyContent="flex-start" alignItems="center" mb="2">
               <Flex alignItems="center" mr="2">
                 {reply.role === "保育士" ? (
-                  <HoikushiIcon height="4vh" />
+                  <HoikushiIcon height="3vh" />
                 ) : (
-                  <HogoshaIcon height="6vh" />
+                  <HogoshaIcon height="4vh" />
                 )}
                 <Text fontWeight="bold" ml="2">
                   {reply.nickname}
@@ -133,7 +134,7 @@ const Detail = () => {
                 w="100%"
                 h="10vh"
                 p={1}
-                borderWidth="2px"
+                borderWidth="1px"
                 borderRadius="md"
                 boxShadow="md"
                 bg="gray.50"
@@ -143,7 +144,18 @@ const Detail = () => {
                 <ReactMarkdown>{reply.comment}</ReactMarkdown>
               </Flex>
             ) : (
-              <Flex direction="column" w="100%" p={1} mb={6}>
+              <Flex
+                direction="column"
+                w="100%"
+                h="auto"
+                p={2}
+                borderWidth="1px"
+                borderRadius="md"
+                // boxShadow="md"
+                bg="gray.50"
+                mb={2}
+                overflowY="auto"
+              >
                 <Flex
                   borderWidth="2px"
                   borderRadius="md"
@@ -179,7 +191,7 @@ const Detail = () => {
         ))}
       </Flex>
 
-      <Box position="fixed" bottom={4} right={4} opacity="80%">
+      <Box position="fixed" bottom={20} right={4} opacity="100%">
         <Button
           onClick={() => setIsOpen(true)}
           colorScheme="teal"

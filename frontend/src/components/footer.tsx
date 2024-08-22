@@ -10,6 +10,7 @@ import { auth } from "../../firebaseConfig";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { BsChevronDoubleLeft } from "react-icons/bs";
 import { FiUsers } from "react-icons/fi";
+import { CgProfile } from "react-icons/cg";
 
 const Footer: FC = () => {
   const { profile } = useProfileContext();
@@ -47,7 +48,7 @@ const Footer: FC = () => {
       h="8%"
       bg="teal.500"
       color="white"
-      opacity={0.8}
+      opacity={``}
       px={6}
       py={2}
       position="fixed"
@@ -55,7 +56,7 @@ const Footer: FC = () => {
       left={0}
       zIndex={1000}
     >
-      <Flex align="center" w="100%" h="100%">
+      <Flex align="center" justify="center" w="100%" h="100%">
         {/* <Box height="95%" mr={4}>
           {profile?.role === "保育士" ? (
             <HoikushiIcon width="100%" height="100%" />
@@ -68,7 +69,13 @@ const Footer: FC = () => {
         </Heading> */}
         {/* <Spacer /> */}
         {canGoBack && (
-          <Button colorScheme="white" size="md" onClick={handleBack}>
+          <Button
+            colorScheme="white"
+            size=""
+            onClick={handleBack}
+            position="fixed"
+            left="10%"
+          >
             <Box as={BsChevronDoubleLeft} boxSize="2.0em" />
           </Button>
         )}
@@ -77,6 +84,8 @@ const Footer: FC = () => {
             colorScheme="white"
             size="md"
             onClick={() => router.push("/home")}
+            position="fixed"
+            left="30%"
           >
             <Box as={PiHouse} boxSize="2.0em" />
           </Button>
@@ -84,16 +93,32 @@ const Footer: FC = () => {
         {/* <Button colorScheme="white" size="md" onClick={handleLogout}>
           <Box as={RiLogoutBoxRLine} boxSize="2.0em" />
         </Button> */}
-        <Button
-          colorScheme="blue"
-          size={{ base: "sm", md: "md" }}
-          rightIcon={<FiUsers />}
-          onClick={() => {
-            router.push("/allPosts");
-          }}
-        >
-          みんなの質問
-        </Button>
+        {isAuthenticated && (
+          <Button
+            colorScheme="white"
+            size="md"
+            onClick={() => {
+              router.push("/allPosts");
+            }}
+            position="fixed"
+            right="30%"
+          >
+            <Box as={FiUsers} boxSize="2.0em" />
+          </Button>
+        )}
+        {isAuthenticated && (
+          <Button
+            colorScheme="white"
+            size="md"
+            onClick={() => {
+              router.push("/profile");
+            }}
+            position="fixed"
+            right="10%"
+          >
+            <Box as={CgProfile} boxSize="2.0em" />
+          </Button>
+        )}
       </Flex>
     </Box>
   );

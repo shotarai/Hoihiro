@@ -66,7 +66,7 @@ const Header: FC = () => {
           {profile?.nickname ? `${profile.nickname} さん` : ""}
         </Heading>
         <Spacer />
-        {canGoBack && (
+        {/* {canGoBack && (
           <Button colorScheme="white" size="md" onClick={handleBack}>
             <Box as={BsChevronDoubleLeft} boxSize="2.0em" />
           </Button>
@@ -79,7 +79,7 @@ const Header: FC = () => {
           >
             <Box as={PiHouse} boxSize="2.0em" />
           </Button>
-        )}
+        )} */}
         <Button colorScheme="white" size="md" onClick={handleLogout}>
           <Box as={RiLogoutBoxRLine} boxSize="2.0em" />
         </Button>
