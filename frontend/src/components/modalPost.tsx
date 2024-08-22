@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Button,
   Box,
@@ -18,12 +18,14 @@ import {
   IconButton,
   Spinner,
   Center,
+  Image,
 } from "@chakra-ui/react";
 import { auth } from "../../firebaseConfig";
 import { database } from "../../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { FiSend } from "react-icons/fi";
 import { FiXCircle } from "react-icons/fi";
+import { useDropzone } from "react-dropzone";
 import { sendResponseChatKeywordGet } from "@/gen/default/default";
 
 export type ModalProps = {
@@ -46,6 +48,35 @@ const ModalPost = (props: ModalProps) => {
   const [content, setContent] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [file, setFile] = useState<File>();
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    setFile(acceptedFiles[0]);
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: {
+      "image/jpeg": [".jpeg"],
+      "image/jpg": [".jpg"],
+      "image/png": [".png"],
+    },
+    maxFiles: 1,
+  });
+
+  const handleUploadImage = () => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = e.target?.result;
+      console.log(data);
+    };
+    reader.readAsDataURL(file as Blob);
+    setFile(undefined);
+  };
+
+  const handleCancelUpload = () => {
+    setFile(undefined);
+  };
 
   const clearText = () => {
     setTitle("");
@@ -75,19 +106,10 @@ const ModalPost = (props: ModalProps) => {
       const seconds = String(currentDate.getSeconds()).padStart(2, "0");
       const time = `${year}/${month}/${day}/${hours}:${minutes}:${seconds}`;
 
-      // const response = await sendResponseChatKeywordGet(content);
-
-      // const newReply = {
-      //   role: "AI",
-      //   nickname: "Gemini AI",
-      //   comment: response.data,
-      // };
-
       const newData = {
         title: title,
         content: content,
         latestTime: time,
-        // replies: { [time]: newReply },
       };
       const currentUserEmail = auth.currentUser?.email
         ? auth.currentUser.email
@@ -185,6 +207,65 @@ const ModalPost = (props: ModalProps) => {
                   setContent(e.target.value);
                 }}
               />
+              <Text mb="4">
+                画像を下のボックスにドラッグ＆ドロップするか、
+                <br />
+                クリックしてアップロードしてください。
+                <br />
+                （サポートされている形式：.jpeg .jpg .png）
+              </Text>
+              <Box
+                {...getRootProps()}
+                height="320px"
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                textAlign="center"
+                borderWidth={2}
+                borderColor="gray.300"
+                overflow="hidden"
+              >
+                <input {...getInputProps()} />
+                {file ? (
+                  <>
+                    <Box mt="5">
+                      <Text>
+                        アップロードされたファイル <br />
+                        {file.name}
+                      </Text>
+                    </Box>
+                    <Box mb="5" maxW="100%" maxH="80%">
+                      <Image
+                        src={URL.createObjectURL(file)}
+                        alt="Uploaded Image"
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        style={{ width: "auto", height: "100%" }}
+                      />
+                    </Box>
+                    <HStack>
+                      <Button
+                        mr={3}
+                        isDisabled={!file}
+                        onClick={handleUploadImage}
+                      >
+                        アップロード
+                      </Button>
+                      <Button
+                        mr={3}
+                        variant="ghost"
+                        onClick={handleCancelUpload}
+                      >
+                        キャンセル
+                      </Button>
+                    </HStack>
+                  </>
+                ) : (
+                  <Text>ファイルが選択されていません。</Text>
+                )}
+              </Box>
             </Stack>
           )}
           {error && (
