@@ -77,18 +77,17 @@ const ModalPost = (props: ModalProps) => {
 
       // const response = await sendResponseChatKeywordGet(content);
 
-      const newReply = {
-        role: "AI",
-        nickname: "Gemini AI",
-        // comment: response.data,
-        comment: "AIによる自動返信です。",
-      };
+      // const newReply = {
+      //   role: "AI",
+      //   nickname: "Gemini AI",
+      //   comment: response.data,
+      // };
 
       const newData = {
         title: title,
         content: content,
         latestTime: time,
-        replies: { [time]: newReply },
+        // replies: { [time]: newReply },
       };
       const currentUserEmail = auth.currentUser?.email
         ? auth.currentUser.email
