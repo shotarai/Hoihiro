@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Box, Heading, Text, VStack, Button, Flex } from "@chakra-ui/react";
+import { Box, Heading, Text, Button, Flex } from "@chakra-ui/react";
 import { IoChatboxEllipses } from "react-icons/io5";
 import ModalReply from "@/components/modalReply";
 import { useEffect, useState } from "react";
@@ -102,27 +102,40 @@ const Detail = () => {
                 </Text>
               </Flex>
             </Flex>
-            <Flex
-              direction="column"
-              justifyContent="center"
-              w="100%"
-              h="10vh"
-              p={1}
-              borderWidth="2px"
-              borderRadius="md"
-              boxShadow="md"
-              bg="gray.50"
-              mb={6}
-              overflowY="auto"
-            >
-              {reply.role === "AI" ? (
+            {reply.role === "AI" ? (
+              <Flex
+                direction="column"
+                w="100%"
+                h="10vh"
+                p={1}
+                borderWidth="2px"
+                borderRadius="md"
+                boxShadow="md"
+                bg="gray.50"
+                mb={6}
+                overflowY="auto"
+              >
                 <ReactMarkdown>{reply.comment}</ReactMarkdown>
-              ) : (
+              </Flex>
+            ) : (
+              <Flex
+                direction="column"
+                justifyContent="center"
+                w="100%"
+                h="10vh"
+                p={1}
+                borderWidth="2px"
+                borderRadius="md"
+                boxShadow="md"
+                bg="gray.50"
+                mb={6}
+                overflowY="auto"
+              >
                 <Text fontSize="lg" fontWeight="bold" textAlign="center">
                   {reply.comment}
                 </Text>
-              )}
-            </Flex>
+              </Flex>
+            )}
           </React.Fragment>
         ))}
       </Flex>
@@ -142,7 +155,7 @@ const Detail = () => {
         onClose={() => setIsOpen(false)}
         onPost={handleNewPost}
         timestamp={safeTimestamp}
-        documetId={safeDocumentId}
+        documentId={safeDocumentId}
       />
     </Box>
   );
