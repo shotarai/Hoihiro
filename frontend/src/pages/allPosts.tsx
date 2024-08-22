@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, HStack, Text, VStack, Image } from "@chakra-ui/react";
 import { database } from "../../firebaseConfig";
 import { collection, doc, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
@@ -19,6 +19,7 @@ const AllPosts = () => {
         { comment: string; role: string; nickname: string }
       >;
       documentId: string;
+      imageURL?: string;
     }[]
   >([]);
 
@@ -32,6 +33,7 @@ const AllPosts = () => {
         content: string;
         timestamp: string;
         latestTime: string;
+        imageURL?: string;
         replies: Record<
           string,
           { comment: string; role: string; nickname: string }
@@ -46,6 +48,7 @@ const AllPosts = () => {
             title: string;
             content: string;
             latestTime: string;
+            imageURL?: string;
             replies: Record<
               string,
               { comment: string; role: string; nickname: string }
@@ -85,6 +88,7 @@ const AllPosts = () => {
       { comment: string; role: string; nickname: string }
     >;
     documentId: string;
+    imageURL?: string;
   }) => {
     router.push({
       pathname: "/detail",
@@ -93,6 +97,7 @@ const AllPosts = () => {
         title: question.title,
         content: question.content,
         documentId: question.documentId,
+        ...(question.imageURL && { imageURL: question.imageURL }),
       },
     });
   };
@@ -106,48 +111,64 @@ const AllPosts = () => {
         {questionsList.map((question, index) => (
           <React.Fragment key={index}>
             <Flex
-              direction="column"
-              justifyContent="center"
               w="100%"
-              h="8vh"
-              pt={8} 
+              h="15vh"
               pr={4}
               pl={4}
               mb={2}
               borderWidth="1px"
               borderRadius="md"
-              // boxShadow="md"
               bg="gray.50"
               _hover={{ bg: "teal.50", cursor: "pointer" }}
               onClick={() => handleCardClick(question)}
+              justifyContent="space-between"
             >
-              <Text fontSize="lg" fontWeight="bold" textAlign="left">
-                {question.title.length > 18
-                    ? question.title.slice(0, 17) + '…' : question.title}
-              </Text>
               <Flex
-              mb={6}
-              mt={2}
-              ml={2}
-              justifyContent="flex-end"
-              alignItems="center"
-            >
-              <Flex mr={4} textAlign="left" alignItems="center">
-                <GoCommentDiscussion />
-                <Text
-                  fontSize={{ base: "xs", md: "sm" }}
-                  fontWeight="normal"
-                  ml={1}
-                >
-                  {question.replies
-                    ? Object.entries(question.replies).length
-                    : 0}
+                pt={8}
+                direction="column"
+                justifyContent="center"
+                // boxShadow="md"
+              >
+                <Text fontSize="lg" fontWeight="bold" textAlign="left">
+                  {question.title.length > 18
+                    ? question.title.slice(0, 17) + "…"
+                    : question.title}
                 </Text>
+                <Flex
+                  mb={6}
+                  mt={2}
+                  ml={2}
+                  justifyContent="flex-end"
+                  alignItems="center"
+                >
+                  <Flex mr={4} textAlign="left" alignItems="center">
+                    <GoCommentDiscussion />
+                    <Text
+                      fontSize={{ base: "xs", md: "sm" }}
+                      fontWeight="normal"
+                      ml={1}
+                    >
+                      {question.replies
+                        ? Object.entries(question.replies).length
+                        : 0}
+                    </Text>
+                  </Flex>
+                  <Text fontSize={{ base: "xs", md: "sm" }} fontWeight="normal">
+                    更新時刻: {question.latestTime}
+                  </Text>
+                </Flex>
               </Flex>
-              <Text fontSize={{ base: "xs", md: "sm" }} fontWeight="normal">
-                更新時刻: {question.latestTime}
-              </Text>
-            </Flex>
+              {question.imageURL && (
+                <Flex alignItems="center">
+                  <Image
+                    src={question.imageURL}
+                    alt="Uploaded Image"
+                    borderRadius="md"
+                    width="auto"
+                    height="10vh"
+                  />
+                </Flex>
+              )}
             </Flex>
           </React.Fragment>
         ))}

@@ -71,10 +71,11 @@ const Footer: FC = () => {
         {canGoBack && (
           <Button
             colorScheme="white"
-            size="" 
+            size=""
             onClick={handleBack}
-            position="fixed" left="10%"
-            >
+            position="fixed"
+            left="10%"
+          >
             <Box as={BsChevronDoubleLeft} boxSize="2.0em" />
           </Button>
         )}
@@ -83,7 +84,8 @@ const Footer: FC = () => {
             colorScheme="white"
             size="md"
             onClick={() => router.push("/home")}
-            position="fixed" left="30%"
+            position="fixed"
+            left="30%"
           >
             <Box as={PiHouse} boxSize="2.0em" />
           </Button>
@@ -92,28 +94,30 @@ const Footer: FC = () => {
           <Box as={RiLogoutBoxRLine} boxSize="2.0em" />
         </Button> */}
         {isAuthenticated && (
-            <Button
-                colorScheme="white"
-                size="md"
-                onClick={() => {
-                    router.push("/allPosts");
-                }}
-                position="fixed" right="30%"
-            >
-                <Box as={FiUsers} boxSize="2.0em" />
-            </Button>
+          <Button
+            colorScheme="white"
+            size="md"
+            onClick={() => {
+              router.push("/allPosts");
+            }}
+            position="fixed"
+            right="30%"
+          >
+            <Box as={FiUsers} boxSize="2.0em" />
+          </Button>
         )}
         {isAuthenticated && (
-            <Button
-                colorScheme="white"
-                size="md"
-                onClick={() => {
-                    router.push("/profile");
-                }}
-                position="fixed" right="10%"
-            >
-                <Box as={CgProfile} boxSize="2.0em" />
-            </Button>
+          <Button
+            colorScheme="white"
+            size="md"
+            onClick={() => {
+              router.push("/profile");
+            }}
+            position="fixed"
+            right="10%"
+          >
+            <Box as={CgProfile} boxSize="2.0em" />
+          </Button>
         )}
       </Flex>
     </Box>
