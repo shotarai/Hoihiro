@@ -74,10 +74,10 @@ const Detail = () => {
         boxShadow="md"
         p={4}
         mt={4}
-        mb={8}
+        mb={4}
         bg="gray.50"
       >
-        <Heading as="h1" mb={4}>
+        <Heading mb={4}>
           Q. {title}
         </Heading>
         <Text fontSize="lg">{content}</Text>

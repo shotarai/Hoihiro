@@ -110,23 +110,26 @@ const AllPosts = () => {
               justifyContent="center"
               w="100%"
               h="8vh"
-              p={1}
-              borderWidth="2px"
+              pt={8} 
+              pr={4}
+              pl={4}
+              mb={2}
+              borderWidth="1px"
               borderRadius="md"
-              boxShadow="md"
+              // boxShadow="md"
               bg="gray.50"
               _hover={{ bg: "teal.50", cursor: "pointer" }}
               onClick={() => handleCardClick(question)}
             >
               <Text fontSize="lg" fontWeight="bold" textAlign="left">
-                {question.title}
+                {question.title.length > 18
+                    ? question.title.slice(0, 17) + '…' : question.title}
               </Text>
-            </Flex>
-            <Flex
+              <Flex
               mb={6}
               mt={2}
               ml={2}
-              justifyContent="flex-start"
+              justifyContent="flex-end"
               alignItems="center"
             >
               <Flex mr={4} textAlign="left" alignItems="center">
@@ -144,6 +147,7 @@ const AllPosts = () => {
               <Text fontSize={{ base: "xs", md: "sm" }} fontWeight="normal">
                 更新時刻: {question.latestTime}
               </Text>
+            </Flex>
             </Flex>
           </React.Fragment>
         ))}
