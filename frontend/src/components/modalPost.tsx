@@ -20,13 +20,12 @@ import {
   Center,
   Image,
 } from "@chakra-ui/react";
-import { auth } from "../../firebaseConfig";
-import { database } from "../../firebaseConfig";
+import { auth, database, storage } from "../../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { FiSend } from "react-icons/fi";
 import { FiXCircle } from "react-icons/fi";
 import { useDropzone } from "react-dropzone";
-import { sendResponseChatKeywordGet } from "@/gen/default/default";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export type ModalProps = {
   open: boolean;
@@ -49,6 +48,7 @@ const ModalPost = (props: ModalProps) => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<File>();
+  const [imageURL, setImageURL] = useState<string | null>(null);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFile(acceptedFiles[0]);
@@ -64,14 +64,19 @@ const ModalPost = (props: ModalProps) => {
     maxFiles: 1,
   });
 
-  const handleUploadImage = () => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const data = e.target?.result;
-      console.log(data);
-    };
-    reader.readAsDataURL(file as Blob);
-    setFile(undefined);
+  const handleUploadImage = async () => {
+    if (!file) return;
+
+    const storageRef = ref(storage, `images/${file.name}`);
+    try {
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      setImageURL(downloadURL);
+      console.log("Image uploaded and URL saved:", downloadURL);
+      setFile(undefined);
+    } catch (error) {
+      console.error("Image upload failed:", error);
+    }
   };
 
   const handleCancelUpload = () => {
@@ -110,7 +115,9 @@ const ModalPost = (props: ModalProps) => {
         title: title,
         content: content,
         latestTime: time,
+        ...(imageURL && { imageURL: imageURL }),
       };
+
       const currentUserEmail = auth.currentUser?.email
         ? auth.currentUser.email
         : "";
@@ -229,12 +236,6 @@ const ModalPost = (props: ModalProps) => {
                 <input {...getInputProps()} />
                 {file ? (
                   <>
-                    <Box mt="5">
-                      <Text>
-                        アップロードされたファイル <br />
-                        {file.name}
-                      </Text>
-                    </Box>
                     <Box mb="5" maxW="100%" maxH="80%">
                       <Image
                         src={URL.createObjectURL(file)}

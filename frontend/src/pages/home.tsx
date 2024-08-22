@@ -76,6 +76,7 @@ const Home = () => {
     timestamp: string;
     title: string;
     content: string;
+    imageURL?: string;
   }) => {
     router.push({
       pathname: "/detail",
@@ -84,6 +85,7 @@ const Home = () => {
         timestamp: question.timestamp,
         title: question.title,
         content: question.content,
+        ...(question.imageURL && { imageURL: question.imageURL }),
       },
     });
   };

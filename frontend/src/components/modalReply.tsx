@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Button,
   Box,
@@ -13,12 +13,16 @@ import {
   ModalBody,
   ModalFooter,
   IconButton,
+  Image,
+  Text,
 } from "@chakra-ui/react";
 import { FiSend } from "react-icons/fi";
 import { FiXCircle } from "react-icons/fi";
 import { useProfileContext } from "@/contexts/ProfileContext";
-import { database } from "../../firebaseConfig";
+import { database, storage } from "../../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
+import { useDropzone } from "react-dropzone";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export type ModalProps = {
   open: boolean;
@@ -34,6 +38,40 @@ export type ModalProps = {
 
 const ModalReply = (props: ModalProps) => {
   const { profile } = useProfileContext();
+  const [file, setFile] = useState<File>();
+  const [imageURL, setImageURL] = useState<string | null>(null);
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    setFile(acceptedFiles[0]);
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: {
+      "image/jpeg": [".jpeg"],
+      "image/jpg": [".jpg"],
+      "image/png": [".png"],
+    },
+    maxFiles: 1,
+  });
+
+  const handleUploadImage = async () => {
+    if (!file) return;
+
+    const storageRef = ref(storage, `images/${file.name}`);
+    try {
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      setImageURL(downloadURL);
+      console.log("Image uploaded and URL saved:", downloadURL);
+    } catch (error) {
+      console.error("Image upload failed:", error);
+    }
+  };
+
+  const handleCancelUpload = () => {
+    setFile(undefined);
+  };
   const clearText = () => {
     setComment("");
   };
@@ -59,6 +97,7 @@ const ModalReply = (props: ModalProps) => {
       role: profile.role,
       nickname: profile.nickname,
       comment: comment,
+      ...(imageURL && { imageURL: imageURL }),
     };
 
     const dataRef = doc(database, "users", props.documentId);
@@ -138,6 +177,51 @@ const ModalReply = (props: ModalProps) => {
             onChange={(e) => setComment(e.target.value)}
             placeholder="返信を入力してください"
           />
+          <Text mb="4">
+            画像を下のボックスにドラッグ＆ドロップするか、
+            <br />
+            クリックしてアップロードしてください。
+            <br />
+            （サポートされている形式：.jpeg .jpg .png）
+          </Text>
+          <Box
+            {...getRootProps()}
+            height="320px"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            textAlign="center"
+            borderWidth={2}
+            borderColor="gray.300"
+            overflow="hidden"
+          >
+            <input {...getInputProps()} />
+            {file ? (
+              <>
+                <Box mb="5" maxW="100%" maxH="80%">
+                  <Image
+                    src={URL.createObjectURL(file)}
+                    alt="Uploaded Image"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    style={{ width: "auto", height: "100%" }}
+                  />
+                </Box>
+                <HStack>
+                  <Button mr={3} isDisabled={!file} onClick={handleUploadImage}>
+                    アップロード
+                  </Button>
+                  <Button mr={3} variant="ghost" onClick={handleCancelUpload}>
+                    キャンセル
+                  </Button>
+                </HStack>
+              </>
+            ) : (
+              <Text>ファイルが選択されていません。</Text>
+            )}
+          </Box>
           {error && (
             <Alert status="error" mt={4}>
               <AlertIcon />

@@ -85,6 +85,7 @@ const AllPosts = () => {
       { comment: string; role: string; nickname: string }
     >;
     documentId: string;
+    imageURL?: string;
   }) => {
     router.push({
       pathname: "/detail",
@@ -93,6 +94,7 @@ const AllPosts = () => {
         title: question.title,
         content: question.content,
         documentId: question.documentId,
+        ...(question.imageURL && { imageURL: question.imageURL }),
       },
     });
   };

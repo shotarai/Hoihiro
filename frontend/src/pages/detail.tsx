@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Box, Heading, Text, Button, Flex } from "@chakra-ui/react";
+import { Box, Heading, Text, Button, Flex, Image } from "@chakra-ui/react";
 import { IoChatboxEllipses } from "react-icons/io5";
 import ModalReply from "@/components/modalReply";
 import { useEffect, useState } from "react";
@@ -13,16 +13,19 @@ import ReactMarkdown from "react-markdown";
 const Detail = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [replies, setReplies] = useState<
-    { role: string; nickname: string; comment: string }[]
+    { role: string; nickname: string; comment: string; imageURL?: string }[]
   >([]);
   const router = useRouter();
-  const { timestamp, title, content, documentId } = router.query;
+  const { timestamp, title, content, documentId, imageURL } = router.query;
   const safeTimestamp: string = Array.isArray(timestamp)
     ? timestamp[0]
     : timestamp || "";
   const safeDocumentId: string = Array.isArray(documentId)
     ? documentId[0]
     : documentId || "";
+  const safeImageURL: string | undefined = Array.isArray(imageURL)
+    ? imageURL[0]
+    : imageURL || undefined;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,7 +58,7 @@ const Detail = () => {
       }
     };
     fetchData();
-  }, [safeDocumentId, safeTimestamp]);
+  }, [safeDocumentId, safeImageURL, safeTimestamp]);
 
   const handleNewPost = (newReply: {
     role: string;
@@ -80,7 +83,20 @@ const Detail = () => {
         <Heading as="h1" mb={4}>
           Q. {title}
         </Heading>
-        <Text fontSize="lg">{content}</Text>
+        <Text fontSize="lg" mb={4}>
+          {content}
+        </Text>
+        {safeImageURL && (
+          <Flex justifyContent="center" mt={2}>
+            <Image
+              src={safeImageURL}
+              alt="Uploaded Image"
+              borderRadius="md"
+              width="20vw"
+              height="auto"
+            />
+          </Flex>
+        )}
       </Box>
 
       <Heading as="h2" size="md" mb={4}>
@@ -118,22 +134,31 @@ const Detail = () => {
                 <ReactMarkdown>{reply.comment}</ReactMarkdown>
               </Flex>
             ) : (
-              <Flex
-                direction="column"
-                justifyContent="center"
-                w="100%"
-                h="10vh"
-                p={1}
-                borderWidth="2px"
-                borderRadius="md"
-                boxShadow="md"
-                bg="gray.50"
-                mb={6}
-                overflowY="auto"
-              >
-                <Text fontSize="lg" fontWeight="bold" textAlign="center">
-                  {reply.comment}
-                </Text>
+              <Flex direction="column" w="100%" p={1} mb={6}>
+                <Flex
+                  borderWidth="2px"
+                  borderRadius="md"
+                  boxShadow="md"
+                  bg="gray.50"
+                  overflowY="auto"
+                  justifyContent="space-between"
+                  height="20vw"
+                >
+                  <Text fontSize="lg" textAlign="left" flex="1">
+                    {reply.comment}
+                  </Text>
+                  {reply.imageURL && (
+                    <Flex justifyContent="flex-end" alignItems="center" ml={2}>
+                      <Image
+                        src={reply.imageURL}
+                        alt="Uploaded Reply Image"
+                        borderRadius="md"
+                        width="auto"
+                        height="20vw"
+                      />
+                    </Flex>
+                  )}
+                </Flex>
               </Flex>
             )}
           </React.Fragment>
