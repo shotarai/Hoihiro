@@ -112,7 +112,7 @@ const AllPosts = () => {
           <React.Fragment key={index}>
             <Flex
               w="100%"
-              pt={8}
+              h="15vh"
               pr={4}
               pl={4}
               mb={2}
@@ -124,6 +124,7 @@ const AllPosts = () => {
               justifyContent="space-between"
             >
               <Flex
+                pt={8}
                 direction="column"
                 justifyContent="center"
                 // boxShadow="md"
@@ -158,13 +159,15 @@ const AllPosts = () => {
                 </Flex>
               </Flex>
               {question.imageURL && (
-                <Image
-                  src={question.imageURL}
-                  alt="Uploaded Image"
-                  borderRadius="md"
-                  width="auto"
-                  height="10vw"
-                />
+                <Flex alignItems="center">
+                  <Image
+                    src={question.imageURL}
+                    alt="Uploaded Image"
+                    borderRadius="md"
+                    width="auto"
+                    height="10vh"
+                  />
+                </Flex>
               )}
             </Flex>
           </React.Fragment>

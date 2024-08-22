@@ -136,19 +136,18 @@ const Home = () => {
               <Flex
                 justifyContent="space-between"
                 w="100%"
-                h="20vh"
-                pt={8}
-                pr={4}
-                pl={4}
-                mb={2}
+                h="15vh"
                 borderWidth="1px"
                 borderRadius="md"
                 // boxShadow="md"
                 bg="gray.50"
+                pr={4}
+                pl={4}
+                mb={2}
                 _hover={{ bg: "teal.50", cursor: "pointer" }}
                 onClick={() => handleCardClick(question)}
               >
-                <Flex direction="column" justifyContent="center">
+                <Flex direction="column" justifyContent="center" pt={8}>
                   <Text fontSize="lg" fontWeight="bold" textAlign="left">
                     {question.title.length > 18
                       ? question.title.slice(0, 17) + "…"
@@ -182,13 +181,15 @@ const Home = () => {
                   </Flex>
                 </Flex>
                 {question.imageURL && (
-                  <Image
-                    src={question.imageURL}
-                    alt="Uploaded Image"
-                    borderRadius="md"
-                    width="auto"
-                    height="10vw"
-                  />
+                  <Flex alignItems="center">
+                    <Image
+                      src={question.imageURL}
+                      alt="Uploaded Image"
+                      borderRadius="md"
+                      width="auto"
+                      height="10vh"
+                    />
+                  </Flex>
                 )}
               </Flex>
             </React.Fragment>

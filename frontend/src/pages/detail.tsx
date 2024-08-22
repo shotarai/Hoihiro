@@ -1,17 +1,19 @@
-import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import { Box, Heading, Text, Button, Flex, Image } from "@chakra-ui/react";
 import { IoChatboxEllipses } from "react-icons/io5";
 import ModalReply from "@/components/modalReply";
-import { useEffect, useState } from "react";
+import ImageModal from "@/components/modalImage";
+import { useRouter } from "next/router";
 import { database } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import HogoshaIcon from "../../public/hogosha.svg";
 import HoikushiIcon from "../../public/hoikushi.svg";
-import React from "react";
 import ReactMarkdown from "react-markdown";
 
 const Detail = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false); // モーダル用のステート
+  const [selectedImageURL, setSelectedImageURL] = useState<string | null>(null);
   const [replies, setReplies] = useState<
     { role: string; nickname: string; comment: string; imageURL?: string }[]
   >([]);
@@ -69,6 +71,13 @@ const Detail = () => {
     setIsOpen(false);
   };
 
+  const handleImageClick = (url: string) => {
+    if (url) {
+      setSelectedImageURL(url);
+      setModalOpen(true);
+    }
+  };
+
   return (
     <Box pt={20} pr="5" pl="5">
       <Box
@@ -92,6 +101,8 @@ const Detail = () => {
               borderRadius="md"
               width="20vw"
               height="auto"
+              onClick={() => handleImageClick(safeImageURL)}
+              cursor="pointer"
             />
           </Flex>
         )}
@@ -141,6 +152,9 @@ const Detail = () => {
                   overflowY="auto"
                   justifyContent="space-between"
                   height="20vw"
+                  pr={4}
+                  pl={4}
+                  pt={2}
                 >
                   <Text fontSize="lg" textAlign="left" flex="1">
                     {reply.comment}
@@ -153,6 +167,8 @@ const Detail = () => {
                         borderRadius="md"
                         width="auto"
                         height="20vw"
+                        onClick={() => handleImageClick(reply.imageURL || "")}
+                        cursor="pointer"
                       />
                     </Flex>
                   )}
@@ -180,6 +196,14 @@ const Detail = () => {
         timestamp={safeTimestamp}
         documentId={safeDocumentId}
       />
+
+      {selectedImageURL && (
+        <ImageModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          imageURL={selectedImageURL}
+        />
+      )}
     </Box>
   );
 };
