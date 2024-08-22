@@ -142,7 +142,7 @@ const Home = () => {
                 _hover={{ bg: "teal.50", cursor: "pointer" }}
                 onClick={() => handleCardClick(question)}
               >
-                <Text fontSize="lg" fontWeight="bold" textAlign="center">
+                <Text fontSize="lg" fontWeight="bold" textAlign="left">
                   {question.title}
                 </Text>
               </Flex>

@@ -29,7 +29,7 @@ export type ModalProps = {
     comment: string;
   }) => void;
   timestamp: string;
-  documetId: string;
+  documentId: string;
 };
 
 const ModalReply = (props: ModalProps) => {
@@ -61,7 +61,7 @@ const ModalReply = (props: ModalProps) => {
       comment: comment,
     };
 
-    const dataRef = doc(database, "users", props.documetId);
+    const dataRef = doc(database, "users", props.documentId);
     const maxRetries = 3;
     let attempts = 0;
     let success = false;

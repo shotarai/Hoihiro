@@ -75,12 +75,13 @@ const ModalPost = (props: ModalProps) => {
       const seconds = String(currentDate.getSeconds()).padStart(2, "0");
       const time = `${year}/${month}/${day}/${hours}:${minutes}:${seconds}`;
 
-      const response = await sendResponseChatKeywordGet(content);
+      // const response = await sendResponseChatKeywordGet(content);
 
       const newReply = {
         role: "AI",
         nickname: "Gemini AI",
-        comment: response.data,
+        // comment: response.data,
+        comment: "AIによる自動返信です。",
       };
 
       const newData = {
