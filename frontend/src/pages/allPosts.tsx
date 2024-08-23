@@ -130,7 +130,7 @@ const AllPosts = () => {
                 // boxShadow="md"
               >
                 <Text fontSize="md" fontWeight="bold" textAlign="left">
-                 {question.title}
+                  {question.title}
                   {/* {question.title.length > 18
                     ? question.title.slice(0, 17) + "…"
                     : question.title} */}
@@ -142,7 +142,12 @@ const AllPosts = () => {
                   justifyContent="flex-start"
                   alignItems="center"
                 >
-                  <Flex mr="4" textAlign="left" alignItems="center" justifyContent="flex-start">
+                  <Flex
+                    mr="4"
+                    textAlign="left"
+                    alignItems="center"
+                    justifyContent="flex-start"
+                  >
                     <GoCommentDiscussion />
                     <Text
                       fontSize={{ base: "xs", md: "sm" }}

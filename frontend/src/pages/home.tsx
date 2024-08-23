@@ -103,6 +103,7 @@ const Home = () => {
       { comment: string; role: string; nickname: string }
     >;
     latestTime: string;
+    imageURL?: string;
   }) => {
     setQuestions((prevQuestions) => [newQuestion, ...prevQuestions]);
     setIsOpen(false);

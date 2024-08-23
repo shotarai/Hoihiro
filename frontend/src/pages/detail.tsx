@@ -156,22 +156,22 @@ const Detail = () => {
                 mb={2}
                 overflowY="auto"
               >
-                  <Text fontSize="sm" textAlign="left" flex="1">
-                    {reply.comment}
-                  </Text>
-                  {reply.imageURL && (
-                    <Flex justifyContent="flex-end" alignItems="center" ml={2}>
-                      <Image
-                        src={reply.imageURL}
-                        alt="Uploaded Reply Image"
-                        borderRadius="md"
-                        width="auto"
-                        height="20vw"
-                        onClick={() => handleImageClick(reply.imageURL || "")}
-                        cursor="pointer"
-                      />
-                    </Flex>
-                  )}
+                <Text fontSize="sm" textAlign="left" flex="1">
+                  {reply.comment}
+                </Text>
+                {reply.imageURL && (
+                  <Flex justifyContent="flex-end" alignItems="center" ml={2}>
+                    <Image
+                      src={reply.imageURL}
+                      alt="Uploaded Reply Image"
+                      borderRadius="md"
+                      width="auto"
+                      height="20vw"
+                      onClick={() => handleImageClick(reply.imageURL || "")}
+                      cursor="pointer"
+                    />
+                  </Flex>
+                )}
               </Flex>
             )}
           </React.Fragment>

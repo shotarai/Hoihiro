@@ -40,6 +40,7 @@ export type ModalProps = {
       { comment: string; role: string; nickname: string }
     >;
     latestTime: string;
+    imageURL?: string;
   }) => void;
 };
 
@@ -63,7 +64,7 @@ const ModalPost = (props: ModalProps) => {
       "image/jpg": [".jpg"],
       "image/png": [".png"],
       "image/heic": [".heic"],
-      "image/HEIC": [".HEIC"]
+      "image/HEIC": [".HEIC"],
     },
     maxFiles: 1,
   });
@@ -77,7 +78,6 @@ const ModalPost = (props: ModalProps) => {
       const downloadURL = await getDownloadURL(storageRef);
       setImageURL(downloadURL);
       console.log("Image uploaded and URL saved:", downloadURL);
-      setFile(undefined);
     } catch (error) {
       console.error("Image upload failed:", error);
     }
@@ -178,6 +178,7 @@ const ModalPost = (props: ModalProps) => {
           timestamp: time,
           latestTime: time,
           replies: {},
+          ...(imageURL && { imageURL: imageURL }),
         };
         props.onPost(newQuestion);
         clearText();
