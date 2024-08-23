@@ -40,6 +40,7 @@ export type ModalProps = {
       { comment: string; role: string; nickname: string }
     >;
     latestTime: string;
+    imageURL?: string;
   }) => void;
 };
 
@@ -62,6 +63,8 @@ const ModalPost = (props: ModalProps) => {
       "image/jpeg": [".jpeg"],
       "image/jpg": [".jpg"],
       "image/png": [".png"],
+      "image/heic": [".heic"],
+      "image/HEIC": [".HEIC"],
     },
     maxFiles: 1,
   });
@@ -75,7 +78,6 @@ const ModalPost = (props: ModalProps) => {
       const downloadURL = await getDownloadURL(storageRef);
       setImageURL(downloadURL);
       console.log("Image uploaded and URL saved:", downloadURL);
-      setFile(undefined);
     } catch (error) {
       console.error("Image upload failed:", error);
     }
@@ -176,6 +178,7 @@ const ModalPost = (props: ModalProps) => {
           timestamp: time,
           latestTime: time,
           replies: {},
+          ...(imageURL && { imageURL: imageURL }),
         };
         props.onPost(newQuestion);
         clearText();
@@ -251,7 +254,7 @@ const ModalPost = (props: ModalProps) => {
                   </Text>
                   <Box
                     {...getRootProps()}
-                    height="20vh"
+                    height="8vh"
                     display="flex"
                     flexDirection="column"
                     justifyContent="center"
@@ -312,7 +315,7 @@ const ModalPost = (props: ModalProps) => {
               onClick={postQuestion}
               colorScheme="teal"
               rightIcon={<FiSend size={20} />}
-              isLoading={isLoading}
+              // isLoading={isLoading}
               loadingText="投稿中"
             >
               投稿

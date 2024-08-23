@@ -79,7 +79,7 @@ const Detail = () => {
   };
 
   return (
-    <Box pt={20} pr="5" pl="5" mb={16}>
+    <Box p={{ base: 4, md: 8 }} pt={20} pb={40} mb={18}>
       <Box
         borderWidth="1px"
         borderRadius="md"
@@ -87,8 +87,8 @@ const Detail = () => {
         p={4}
         mt={4}
         mb={4}
-        mr={4}
-        bg="gray.50"
+        // mr={4}
+        // bg="gray.50"
       >
         <Heading size="lg" mb={4}>
           Q. {title}
@@ -132,12 +132,12 @@ const Detail = () => {
               <Flex
                 direction="column"
                 w="100%"
-                h="10vh"
+                h="auto"
                 p={1}
                 borderWidth="1px"
                 borderRadius="md"
-                boxShadow="md"
-                bg="gray.50"
+                // boxShadow="md"
+                // bg="gray.50"
                 mb={6}
                 overflowY="auto"
               >
@@ -152,39 +152,26 @@ const Detail = () => {
                 borderWidth="1px"
                 borderRadius="md"
                 // boxShadow="md"
-                bg="gray.50"
+                // bg="gray.50"
                 mb={2}
                 overflowY="auto"
               >
-                <Flex
-                  borderWidth="2px"
-                  borderRadius="md"
-                  boxShadow="md"
-                  bg="gray.50"
-                  overflowY="auto"
-                  justifyContent="space-between"
-                  height="20vw"
-                  pr={4}
-                  pl={4}
-                  pt={2}
-                >
-                  <Text fontSize="lg" textAlign="left" flex="1">
-                    {reply.comment}
-                  </Text>
-                  {reply.imageURL && (
-                    <Flex justifyContent="flex-end" alignItems="center" ml={2}>
-                      <Image
-                        src={reply.imageURL}
-                        alt="Uploaded Reply Image"
-                        borderRadius="md"
-                        width="auto"
-                        height="20vw"
-                        onClick={() => handleImageClick(reply.imageURL || "")}
-                        cursor="pointer"
-                      />
-                    </Flex>
-                  )}
-                </Flex>
+                <Text fontSize="sm" textAlign="left" flex="1">
+                  {reply.comment}
+                </Text>
+                {reply.imageURL && (
+                  <Flex justifyContent="flex-end" alignItems="center" ml={2}>
+                    <Image
+                      src={reply.imageURL}
+                      alt="Uploaded Reply Image"
+                      borderRadius="md"
+                      width="auto"
+                      height="20vw"
+                      onClick={() => handleImageClick(reply.imageURL || "")}
+                      cursor="pointer"
+                    />
+                  </Flex>
+                )}
               </Flex>
             )}
           </React.Fragment>
