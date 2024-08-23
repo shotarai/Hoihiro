@@ -112,36 +112,37 @@ const AllPosts = () => {
           <React.Fragment key={index}>
             <Flex
               w="100%"
-              h="15vh"
-              pr={4}
-              pl={4}
+              h="auto"
+              pr={2}
+              pl={2}
               mb={2}
               borderWidth="1px"
               borderRadius="md"
-              bg="gray.50"
+              // bg="gray.50"
               _hover={{ bg: "teal.50", cursor: "pointer" }}
               onClick={() => handleCardClick(question)}
               justifyContent="space-between"
             >
               <Flex
-                pt={8}
+                pt={2}
                 direction="column"
                 justifyContent="center"
                 // boxShadow="md"
               >
-                <Text fontSize="lg" fontWeight="bold" textAlign="left">
-                  {question.title.length > 18
+                <Text fontSize="md" fontWeight="bold" textAlign="left">
+                 {question.title}
+                  {/* {question.title.length > 18
                     ? question.title.slice(0, 17) + "…"
-                    : question.title}
+                    : question.title} */}
                 </Text>
                 <Flex
-                  mb={6}
-                  mt={2}
+                  mb={1}
+                  mt={1}
                   ml={2}
-                  justifyContent="flex-end"
+                  justifyContent="flex-start"
                   alignItems="center"
                 >
-                  <Flex mr={4} textAlign="left" alignItems="center">
+                  <Flex mr="4" textAlign="left" alignItems="center" justifyContent="flex-start">
                     <GoCommentDiscussion />
                     <Text
                       fontSize={{ base: "xs", md: "sm" }}
@@ -165,7 +166,8 @@ const AllPosts = () => {
                     alt="Uploaded Image"
                     borderRadius="md"
                     width="auto"
-                    height="10vh"
+                    height="8vh"
+                    p={0.5}
                   />
                 </Flex>
               )}

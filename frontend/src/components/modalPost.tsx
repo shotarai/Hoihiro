@@ -62,6 +62,8 @@ const ModalPost = (props: ModalProps) => {
       "image/jpeg": [".jpeg"],
       "image/jpg": [".jpg"],
       "image/png": [".png"],
+      "image/heic": [".heic"],
+      "image/HEIC": [".HEIC"]
     },
     maxFiles: 1,
   });
@@ -251,7 +253,7 @@ const ModalPost = (props: ModalProps) => {
                   </Text>
                   <Box
                     {...getRootProps()}
-                    height="20vh"
+                    height="8vh"
                     display="flex"
                     flexDirection="column"
                     justifyContent="center"
@@ -312,7 +314,7 @@ const ModalPost = (props: ModalProps) => {
               onClick={postQuestion}
               colorScheme="teal"
               rightIcon={<FiSend size={20} />}
-              isLoading={isLoading}
+              // isLoading={isLoading}
               loadingText="投稿中"
             >
               投稿

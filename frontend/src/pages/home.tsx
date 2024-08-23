@@ -137,19 +137,19 @@ const Home = () => {
               <Flex
                 justifyContent="space-between"
                 w="100%"
-                h="15vh"
+                h="auto"
                 borderWidth="1px"
                 borderRadius="md"
                 // boxShadow="md"
-                bg="gray.50"
-                pr={4}
-                pl={4}
+                // bg="gray.50"
+                pr={2}
+                pl={2}
                 mb={2}
                 _hover={{ bg: "teal.50", cursor: "pointer" }}
                 onClick={() => handleCardClick(question)}
               >
                 <Flex direction="column" justifyContent="center" pt={8}>
-                  <Text fontSize="lg" fontWeight="bold" textAlign="left">
+                  <Text fontSize="md" fontWeight="bold" textAlign="left">
                     {question.title.length > 18
                       ? question.title.slice(0, 17) + "…"
                       : question.title}
