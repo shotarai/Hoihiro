@@ -1,14 +1,13 @@
 import { Box, Flex, Heading, Spacer, Button } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
 import { useProfileContext } from "@/contexts/ProfileContext";
-import HogoshaIcon from "../../public/hogosha.svg";
-import HoikushiIcon from "../../public/hoikushi.svg";
 import { PiHouse } from "react-icons/pi";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { useRouter } from "next/router";
 import { auth } from "../../firebaseConfig";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { BsChevronDoubleLeft } from "react-icons/bs";
+import Hoihiro from "../../public/hoihiro.svg";
 
 const Header: FC = () => {
   const { profile } = useProfileContext();
@@ -56,11 +55,7 @@ const Header: FC = () => {
     >
       <Flex align="center" w="100%" h="100%">
         <Box height="95%" mr={4}>
-          {profile?.role === "保育士" ? (
-            <HoikushiIcon width="100%" height="100%" />
-          ) : (
-            <HogoshaIcon width="100%" height="100%" />
-          )}
+          <Hoihiro width="100%" height="100%" />
         </Box>
         <Heading as="h2" size="md">
           {profile?.nickname ? `${profile.nickname} さん` : ""}
