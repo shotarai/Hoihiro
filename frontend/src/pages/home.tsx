@@ -62,7 +62,8 @@ const Home = () => {
         if (dataArray.length > 0) {
           const sortedDataArray = dataArray.sort(
             (a, b) =>
-              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+              new Date(b.latestTime).getTime() -
+              new Date(a.latestTime).getTime(),
           );
           setQuestions(sortedDataArray);
         } else {
