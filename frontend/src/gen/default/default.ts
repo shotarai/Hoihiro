@@ -14,7 +14,10 @@ export const sendResponseChatKeywordGet = <TData = AxiosResponse<string>>(
   keyword: string,
   options?: AxiosRequestConfig,
 ): Promise<TData> => {
-  return axios.get(`http://localhost:8000/chat/${keyword}`, options);
+  return axios.get(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/chat/${keyword}`,
+    options,
+  );
 };
 /**
  * @summary Read Root
@@ -22,5 +25,5 @@ export const sendResponseChatKeywordGet = <TData = AxiosResponse<string>>(
 export const readRootGet = <TData = AxiosResponse<unknown>>(
   options?: AxiosRequestConfig,
 ): Promise<TData> => {
-  return axios.get(`http://localhost:8000/`, options);
+  return axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/`, options);
 };
